@@ -1,0 +1,91 @@
+.hero {
+  background: url('/img/konn.jpg') center/cover no-repeat;
+  background-size: cover; /* Make sure the image covers the entire hero section */
+  color: white;
+  text-align: center;
+  padding: 8rem 1rem; /* Increased padding to fill more space */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* Ensure it takes full viewport height */
+}
+
+.heroContainer {
+  max-width: 800px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 3rem; /* Increased padding for better spacing */
+  border-radius: 12px;
+}
+
+.title {
+  font-size: 4rem; /* Increased font size for better visibility */
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: 2rem; /* Increased font size for better visibility */
+  margin-top: 1rem; /* Increased margin for spacing */
+}
+
+.buttons {
+  margin-top: 3rem; /* Increased margin for spacing */
+  display: flex;
+  justify-content: center;
+  gap: 2rem; /* Increased gap between buttons */
+  flex-wrap: wrap; /* Ensure buttons wrap on smaller screens */
+}
+
+.button, .buttonOutline {
+  padding: 1rem 2rem; /* Increased padding for larger buttons */
+  font-size: 1.5rem; /* Increased font size */
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition effect */
+}
+
+.button {
+  background-color: #61dafb;
+  color: #282c34;
+}
+
+.buttonOutline {
+  border: 2px solid #61dafb;
+  color: #61dafb;
+}
+
+.button:hover {
+  background-color: #42a5f5;
+  color: white;
+}
+
+.buttonOutline:hover {
+  background-color: #61dafb;
+  color: #282c34;
+}
+
+/* Media queries for different screen sizes */
+@media (max-width: 768px) {
+  .hero {
+    padding: 4rem 1rem; /* Adjust padding for smaller screens */
+  }
+
+  .title {
+    font-size: 2.5rem; /* Adjust font size for smaller screens */
+  }
+
+  .subtitle {
+    font-size: 1.25rem; /* Adjust font size for smaller screens */
+  }
+
+  .buttons {
+    flex-direction: column; /* Stack buttons vertically on smaller screens */
+    gap: 1rem; /* Adjust gap for smaller screens */
+  }
+
+  .button, .buttonOutline {
+    font-size: 1.25rem; /* Adjust font size for smaller screens */
+    padding: 0.75rem 1.5rem; /* Adjust padding for smaller screens */
+  }
+}
