@@ -1,0 +1,27 @@
+{
+  "name": "konn",
+  "version": "0.1.0",
+  "description": "Jsonnet-based configuration management library that provides structured methods to create, transform, and manage Kubernetes manifests, JSON, and YAML configurations.Konn brings several advantages over plain Jsonnet, especially in the context of large-scale configuration management and feature-driven development.",
+  "main": "main.libsonnet",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "docusaurus start",
+    "build": "docusaurus build",
+    "deploy": "docusaurus deploy",
+    "serve": "docusaurus serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nr8-io/konn.git"
+  },
+  "author": "Micah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nr8-io/konn/issues"
+  },
+  "homepage": "https://github.com/nr8-io/konn#readme",
+  "dependencies": {
+    "@docusaurus/core": "^2.0.0",
+    "@docusaurus/preset-classic": "^2.0.0"
+  }
+}

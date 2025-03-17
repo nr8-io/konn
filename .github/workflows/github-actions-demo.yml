@@ -1,0 +1,52 @@
+name: Deploy to GitHub Pages  
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow on push to the main branch
+
+jobs:
+  build:
+    name: Build Docusaurus  
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4  # Checkout the repository
+        with:
+          fetch-depth: 0  # Fetch the entire history for proper build context
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4  # Setup Node.js environment
+        with:
+          node-version: 18
+          cache: npm  # Enable caching of npm dependencies
+
+      - name: Install dependencies  
+        working-directory: documentation
+        run: npm ci  # Install project dependencies
+
+      - name: Build website
+        working-directory: documentation
+        run: npm run build  # Build the Docusaurus site
+
+      - name: Upload Build Artifact
+        uses: actions/upload-pages-artifact@v3  # Upload the build directory as an artifact
+        with:
+          path: documentation/build  # Specify the path to the build directory
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build  # Depend on the build job to complete before starting
+
+    permissions:
+      pages: write  # Grant permissions to deploy to Pages
+      id-token: write  # Verify the deployment source
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}  # Set the URL of the deployed site
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4  # Deploy the build artifacts to GitHub Pages
