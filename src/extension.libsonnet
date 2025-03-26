@@ -68,7 +68,7 @@ local lib = import './helpers.libsonnet';
     local render = self.args.render;
     local resolvedProps = lib.resolveProps(self, props);
 
-    if self.selector(ctx, config, props) then (
+    if self.selector(ctx, config, resolvedProps) then (
       config.extend(function(ctx, target, moreProps) (
         render(ctx, target, resolvedProps)
       ))
