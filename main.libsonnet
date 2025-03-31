@@ -35,13 +35,13 @@ local util = import './src/util.libsonnet';
 
   app(
     features=[],
-    props={},
+    defaults={},
     profiles={},
     extensions=[],
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
   ):: (
-    app.new(features, props, profiles, extensions, filter, map)
+    app.new(features, defaults, profiles, extensions, filter, map)
   ),
 
   feature(
