@@ -20,8 +20,20 @@ Parses a YAML string with optional templating. Supports returning a single docum
 ### Return Value
 Returns the parsed YAML document(s). If `single` is true and there is only one document, returns a single document; otherwise, returns an array of documents.
 
-## Usage Examples
+:::note when using %
+When using standalone % in a yaml you will end up with an error because konn is expecting a template eg %(prop)s.
+Real life example if you have a yaml with the following data you will end up with an error
+```yaml
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+```
+To overcome this use double %% instead of single %
+:::
 
+## Usage Examples
 
 <Tabs>
   <TabItem value="jsonnet" label="Jsonnet" default>
