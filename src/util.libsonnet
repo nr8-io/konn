@@ -68,9 +68,17 @@ local json = function(str, props={}, single=true, template=true) (
 );
 
 // trace function for debugging
-local trace = function(target, msg='') (
-  std.trace(msg + ' ' + std.manifestJson(target), target)
+local trace = function(target, message='', return=function() null) (
+  // enable return value override
+  local returnValue = if std.isFunction(return) then (
+    target
+  ) else (
+    return
+  );
+
+  std.trace(message + ' ' + std.manifestJson(target), returnValue)
 );
+
 
 {
   onlyIf:: onlyIf,
