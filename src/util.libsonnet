@@ -68,7 +68,7 @@ local json = function(str, props={}, single=true, template=true) (
 );
 
 // trace function for debugging
-local trace = function(msg, target) (
+local trace = function(target, msg='') (
   std.trace(msg + ' ' + std.manifestJson(target), target)
 );
 
