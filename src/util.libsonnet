@@ -67,10 +67,16 @@ local json = function(str, props={}, single=true, template=true) (
   if single && std.length(documents) == 1 then documents[0] else documents
 );
 
+// trace function for debugging
+local trace = function(msg, target) (
+  std.trace(msg + ' ' + std.manifestJson(target), target)
+);
+
 {
   onlyIf:: onlyIf,
   onlyIfArray:: onlyIfArray,
   template:: template,
   yaml:: yaml,
   json:: json,
+  trace:: trace,
 }

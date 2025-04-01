@@ -13,6 +13,7 @@ local util = import './src/util.libsonnet';
   json:: util.json,
   template:: util.template,
   onlyIf:: util.onlyIf,
+  trace:: util.trace,
 
   // lib functions
   isConfig:: helpers.isConfig,
