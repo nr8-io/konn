@@ -82,6 +82,44 @@ local manifest = import './manifest.libsonnet';
     self.render(ctx, moreProps)
   ),
 
+  debug(
+    props=self.args.defaults,
+    profile='default',
+  ):: (
+    // get the profile props
+    local profileProps = if std.objectHas(self.profiles, profile) then (
+      self.profiles[profile]
+    )
+    else (
+      error 'profile "' + profile + '" not found'
+    );
+
+    // merge global defaults with profile defaults
+    local defaultProps = std.mergePatch(self.args.defaults, profileProps);
+    // merge defaults with provided values
+    local mergedProps = std.mergePatch(defaultProps, props);
+
+    // render context with profile metadata
+    local ctx = context.new(mergedProps, metadata={
+      profile: profile,
+    });
+
+    local body = self.render(ctx, mergedProps);
+    local profiles = self.profiles;
+    local defaults = self.args.defaults;
+
+    {
+      _debug: {
+        '[10] supplied profile at init': profile,
+        '[11] supplied props at init': props,
+        '[20] app defaults': defaults,
+        '[21] app profiles': profiles,
+        '[30] final render props': mergedProps,
+      },
+      body: body,
+    }
+  ),
+
   // resolve individual configs
   resolve(
     ctx=context.new(self.args.defaults, self.args.config),
