@@ -10,8 +10,16 @@ local onlyIf = function(test, patch, default={}) (
 
 // Conditional patch with default value,
 // same as onlyIf but default is an empty array for convenience
-local onlyIfArray = function(test, patch, default=[]) (
+local onlyIfArr = function(test, patch, default=[]) (
   onlyIf(test, patch, default)
+);
+
+local onlyIfHas = function(obj, key, patch, default={}) (
+  onlyIf(std.objectHas(obj, key), patch, default)
+);
+
+local onlyIfHasArr = function(obj, key, patch, default=[]) (
+  onlyIf(std.objectHas(obj, key), patch, default)
 );
 
 // Uesd for importing string documents with templating and includes
@@ -81,10 +89,17 @@ local trace = function(target, message='', return=function() null) (
 
 
 {
+  // conditional helpers
   onlyIf:: onlyIf,
-  onlyIfArray:: onlyIfArray,
+  onlyIfArr:: onlyIfArr,
+  onlyIfHas:: onlyIfHas,
+  onlyIfHasArr:: onlyIfHasArr,
+
+  // templating helpers
   template:: template,
   yaml:: yaml,
   json:: json,
+
+  // debugging helpers
   trace:: trace,
 }

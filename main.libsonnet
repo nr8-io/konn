@@ -1,18 +1,25 @@
-local app = import './src/app.libsonnet';
-local config = import './src/config.libsonnet';
-local context = import './src/context.libsonnet';
-local extension = import './src/extension.libsonnet';
-local feature = import './src/feature.libsonnet';
-local helpers = import './src/helpers.libsonnet';
-local manifest = import './src/manifest.libsonnet';
-local util = import './src/util.libsonnet';
+local app = import './lib/app.libsonnet';
+local config = import './lib/config.libsonnet';
+local context = import './lib/context.libsonnet';
+local extension = import './lib/extension.libsonnet';
+local feature = import './lib/feature.libsonnet';
+local helpers = import './lib/helpers.libsonnet';
+local manifest = import './lib/manifest.libsonnet';
+local util = import './lib/util.libsonnet';
 
 {
   // util functions
+  onlyIf:: util.onlyIf,
+  onlyIfArr:: util.onlyIfArr,
+  onlyIfHas:: util.onlyIfHas,
+  onlyIfHasArr:: util.onlyIfHasArr,
+
+  // templating helpers
   yaml:: util.yaml,
   json:: util.json,
   template:: util.template,
-  onlyIf:: util.onlyIf,
+
+  // debugging helpers
   trace:: util.trace,
 
   // lib functions
@@ -25,6 +32,7 @@ local util = import './src/util.libsonnet';
   fromYaml:: manifest.fromYaml,
   fromJson:: manifest.fromJson,
 
+  // lib exports
   lib:: {
     app: app,
     config: config,
