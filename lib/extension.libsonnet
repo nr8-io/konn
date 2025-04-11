@@ -12,11 +12,13 @@ local lib = import './helpers.libsonnet';
     props={},  // extension default props
     selector=function(ctx, config, props) true,  // selector function
     extends=config.new(),  // renderable config or manifest to extend
+    schema=null,
   ):: (
     local ctx = context.new(props);
 
     self + {
       body: self.render(ctx, props),
+      schema: schema,
       props:: props,
       args:: {
         render: render,
@@ -83,6 +85,7 @@ local lib = import './helpers.libsonnet';
     props={},
     selector=function(ctx, config, props) true,  // selector function
     extends=config.new(),  // renderable config or manifest to extend
+    schema=self.schema,
   ):: (
     self.new(
       render=function(ctx, config, props) (
@@ -93,6 +96,7 @@ local lib = import './helpers.libsonnet';
       props=lib.resolveProps(self, props),
       selector=selector,
       extends=extends,
+      schema=schema,
     )
   ),
 
