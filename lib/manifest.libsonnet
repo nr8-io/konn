@@ -13,12 +13,13 @@ local util = import './util.libsonnet';
     source,
     props={},
     filter=function(ctx, config, props) true,
-    map=function(ctx, config, props) config
+    map=function(ctx, config, props) config,
+    schema=null
   ):: (
     if lib.isManifest(source) then (
       source
     ) else if std.isFunction(source) then (
-      self.new(source, props, filter, map)
+      self.new(source, props, filter, map, schema)
     ) else if std.isArray(source) || std.isObject(source) then (
       // create a manifest render function to handle the source
       local render = function(ctx, props) (
@@ -38,11 +39,11 @@ local util = import './util.libsonnet';
         props
       );
 
-      self.new(render, props, filter, map)
+      self.new(render, props, filter, map, schema)
     ) else if std.isString(source) && (std.startsWith(source, '[') || std.startsWith(source, '{')) then (
-      self.fromJson(source, props)
+      self.fromJson(source, props, schema)
     ) else if std.isString(source) then (
-      self.fromYaml(source, props)
+      self.fromYaml(source, props, schema)
     ) else (
       error 'Invalid config source'
     )
@@ -55,7 +56,8 @@ local util = import './util.libsonnet';
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
     single=false,
-    template=true
+    template=true,
+    schema=null
   ):: (
     self.new(
       function(ctx, props) (
@@ -75,6 +77,7 @@ local util = import './util.libsonnet';
       props,
       filter,
       map,
+      schema,
     )
   ),
 
@@ -84,6 +87,7 @@ local util = import './util.libsonnet';
     props={},
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
+    schema=null,
   ):: (
     self.new(
       function(ctx, props) (
@@ -101,6 +105,9 @@ local util = import './util.libsonnet';
         )
       ),
       props,
+      filter,
+      map,
+      schema,
     )
   ),
 
@@ -110,11 +117,13 @@ local util = import './util.libsonnet';
     props={},
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
+    schema=null
   ):: (
     local ctx = context.new(props);
 
     self + {
       body: self.render(ctx, props),
+      schema: schema,
       configs:: self.resolve(ctx, props),
       props:: props,
       args:: {
@@ -197,7 +206,8 @@ local util = import './util.libsonnet';
     render=function(ctx, manifest, props) manifest,
     props={},
     filter=function(ctx, config, props) true,
-    map=function(ctx, config, props) config
+    map=function(ctx, config, props) config,
+    schema=self.schema
   ):: (
     local manifest = self.render(context.new(props), props);
 
@@ -212,6 +222,7 @@ local util = import './util.libsonnet';
       map=function(ctx, config, props) (
         map(ctx, self.args.map(ctx, config, props), props)
       ),
+      schema=schema,
     )
   ),
 

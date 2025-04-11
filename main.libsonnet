@@ -49,8 +49,9 @@ local util = import './lib/util.libsonnet';
     extensions=[],
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
+    schema=null
   ):: (
-    app.new(features, defaults, profiles, extensions, filter, map)
+    app.new(features, defaults, profiles, extensions, filter, map, schema)
   ),
 
   feature(
@@ -59,8 +60,9 @@ local util = import './lib/util.libsonnet';
     extensions=[],
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
+    schema=null
   ):: (
-    feature.new(configs, props, extensions, filter, map)
+    feature.new(configs, props, extensions, filter, map, schema)
   ),
 
   manifest(
@@ -68,15 +70,17 @@ local util = import './lib/util.libsonnet';
     props={},
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
+    schema=null
   ):: (
-    manifest.from(render, props, filter, map)
+    manifest.from(render, props, filter, map, schema)
   ),
 
   config(
     render=function(ctx, props) {},
-    props={}
+    props={},
+    schema=null
   ):: (
-    config.from(render, props)
+    config.from(render, props, schema)
   ),
 
   extension(
@@ -84,8 +88,9 @@ local util = import './lib/util.libsonnet';
     props={},  // extension default props
     selector=function(ctx, config, props) true,  // selector function
     extends=config.new(),  // renderable config or manifest to extend
+    schema=null
   ):: (
-    extension.new(render, props, selector, extends)
+    extension.new(render, props, selector, extends, schema)
   ),
 
 }

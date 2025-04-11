@@ -8,11 +8,11 @@ local util = import './util.libsonnet';
 
   // create a new config from and object or renderable object
   // if the source is a config it will return the original source
-  from(source, props={}):: (
+  from(source, props={}, schema=null):: (
     if lib.isConfig(source) then (
       source
     ) else if std.isFunction(source) then (
-      self.new(source, props)
+      self.new(source, props, schema)
     ) else if std.isObject(source) then (
       // create a manifest render function to handle the source
       local render = function(ctx, props) (
@@ -35,11 +35,11 @@ local util = import './util.libsonnet';
         props
       );
 
-      self.new(render, moreProps)
+      self.new(render, moreProps, schema)
     ) else if std.isString(source) && std.startsWith(source, '{') then (
-      self.fromJson(source, props)
+      self.fromJson(source, props, schema)
     ) else if std.isString(source) then (
-      self.fromYaml(source, props)
+      self.fromYaml(source, props, schema)
     ) else (
       error 'Invalid config source'
     )
@@ -49,6 +49,7 @@ local util = import './util.libsonnet';
   fromYaml(
     yaml,
     props={},
+    schema=null
   ):: (
     self.new(
       function(ctx, props) (
@@ -68,7 +69,8 @@ local util = import './util.libsonnet';
   // manifest from yaml string
   fromJson(
     json,
-    props={}
+    props={},
+    schema=null
   ):: (
     self.new(
       function(ctx, props) (
@@ -88,12 +90,14 @@ local util = import './util.libsonnet';
   // create a new config
   new(
     render=function(ctx, props) {},
-    props={}
+    props={},
+    schema=null
   ):: (
     local ctx = context.new(props);
 
     self + {
       body: self.render(ctx, props),
+      schema: schema,
       props:: props,
       args:: {
         render: render,
@@ -110,7 +114,7 @@ local util = import './util.libsonnet';
   ),
 
   //
-  extend(fn, props={}):: (
+  extend(fn, props={}, schema=self.schema):: (
     local config = self.args.render(context.new(props), props);
     local moreProps = lib.resolveProps(self, props);
 
@@ -118,7 +122,8 @@ local util = import './util.libsonnet';
       function(ctx, props) (
         fn(ctx, config, props)
       ),
-      moreProps
+      moreProps,
+      schema
     )
   ),
 

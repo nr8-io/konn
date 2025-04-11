@@ -14,11 +14,13 @@ local manifest = import './manifest.libsonnet';
     extensions=[],
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
+    schema=null
   ):: (
     local ctx = context.new(props);
 
     self + {
       body: self.render(ctx, props),
+      schema: schema,
       configs:: self.resolve(ctx, props),
       props:: props,
       args:: {
@@ -148,7 +150,8 @@ local manifest = import './manifest.libsonnet';
     props={},
     extensions=[],
     filter=function(ctx, config, props) true,
-    map=function(ctx, config, props) config
+    map=function(ctx, config, props) config,
+    schema=self.schema
   ):: (
     self.new(
       configs=self.args.configs + configs,
@@ -160,6 +163,7 @@ local manifest = import './manifest.libsonnet';
       map=function(ctx, config, props) (
         map(ctx, self.args.map(ctx, config, props), props)
       ),
+      schema=schema
     )
   ),
 

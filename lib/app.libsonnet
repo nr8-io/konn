@@ -16,11 +16,13 @@ local manifest = import './manifest.libsonnet';
     extensions=[],
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
+    schema=null
   ):: (
     local ctx = context.new(defaults);
 
     self + {
       body: self.init(defaults),
+      schema: schema,
       configs:: self.resolve(ctx, defaults),
       profiles:: {
         default: {},  // so we can render without a profile
@@ -260,7 +262,8 @@ local manifest = import './manifest.libsonnet';
     profiles={},
     extensions=[],
     filter=function(ctx, config, props) true,
-    map=function(ctx, config, props) config
+    map=function(ctx, config, props) config,
+    schema=self.schema
   ):: (
     self.new(
       features=self.args.features + features,
@@ -273,10 +276,11 @@ local manifest = import './manifest.libsonnet';
       map=function(ctx, config, props) (
         map(ctx, self.args.map(ctx, config, props), props)
       ),
+      schema=schema
     )
   ),
 
-  // returns an extened manifest with a filter applied
+  // returns an extended manifest with a filter applied
   filter(fn):: (
     self.extend(filter=fn)
   ),
