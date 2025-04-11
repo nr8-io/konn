@@ -35,6 +35,7 @@ local option = function(key, value, private=false) (
     multipleOf=null,
 
     // string
+    format=null,
     maxLength=null,
     minLength=null,
     pattern=null,  // https://json-schema.org/understanding-json-schema/reference/regular_expressions
@@ -83,10 +84,10 @@ local option = function(key, value, private=false) (
     + option('deprecated', deprecated)
 
     // string
+    + option('format', format)
     + option('pattern', pattern)
     + option('minLength', minLength)
     + option('maxLength', maxLength)
-
 
     // numbers
     + option('multipleOf', multipleOf)
@@ -185,6 +186,61 @@ local option = function(key, value, private=false) (
     )
   ),
 
+  // render property as schema
+  schema(
+    // schema specific
+    override={},
+    schema='https://json-schema.org/draft/2020-12/schema',
+    id=null,
+  ):: (
+    self {
+      '$schema': schema,
+    } + if (id != null) then (
+      {
+        '$id': id,
+      }
+    ) else (
+      {}
+    ) + override
+  ),
+
+  // access property by key
+  property(key):: (
+    local type = self.type;
+
+    if type == 'object' && std.objectHas(self.properties, key) then (
+      self.properties[key]
+    ) else (
+      null
+    )
+  ),
+
+  // access array item by key
+  item():: (
+    local type = self.type;
+
+    if type == 'array' && std.objectHas(self, 'items') then (
+      self.items
+    ) else (
+      null
+    )
+  ),
+
+
   // gets the default value for the property, used for filling defaults
-  value():: self.default,
+  defaults():: (
+    local type = self.type;
+
+    if type == 'object' then (
+      local properties = self.properties;
+      {
+        [x]: properties[x].defaults()
+        for x in std.objectFields(properties)
+        if std.objectHas(properties[x], 'default')
+      }
+    ) else if std.objectHas(self, 'default') then (
+      self.default
+    )
+  ),
+
 }

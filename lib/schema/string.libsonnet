@@ -11,6 +11,7 @@ function(
   deprecated=null,
 
   // string
+  format=null,
   pattern=null,
   minLength=null,
   maxLength=null,
@@ -28,6 +29,7 @@ function(
     examples=examples,
     deprecated=deprecated,
 
+    format=format,
     pattern=pattern,
     minLength=minLength,
     maxLength=maxLength,
