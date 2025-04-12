@@ -39,6 +39,27 @@ local getPath = function(obj, path, defaultValue=null) (
   get(obj, keys)
 );
 
+local setPath = function(obj, path, value=null) (
+  local keys = std.split(path, '.');  // Split the path by dots to get individual keys
+
+  local set = function(o, k, value) (
+    if std.length(k) == 0 then (
+      value
+    )
+    else if std.isObject(o) && std.objectHas(o, k[0]) then (
+      o {
+        [k[0]]: set(o[k[0]], std.slice(k, 1, null, null), value),
+      }
+    ) else (
+      o {
+        [k[0]]: set({}, std.slice(k, 1, null, null), value),
+      }
+    )
+  );
+
+  set(obj, keys, value)
+);
+
 // Test if a given target is a valid renderable object
 local isRenderable = function(target) (
   std.isObject(target)
@@ -125,6 +146,7 @@ local resolveProps = function(target, props={}) (
 {
   applyExtensions:: applyExtensions,
   getPath:: getPath,
+  setPath:: setPath,
   isConfig:: isConfig,
   isManifest:: isManifest,
   isRenderable:: isRenderable,

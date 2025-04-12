@@ -22,7 +22,7 @@ local onlyIfHasArr = function(obj, key, patch, default=[]) (
   onlyIf(std.objectHas(obj, key), patch, default)
 );
 
-// Uesd for importing string documents with templating and includes
+// Used for importing string documents with templating and includes
 // Automatically removes lines where props were null to keep formatting
 local template = function(str, props={}) (
   local nullable = std.mapWithKey(

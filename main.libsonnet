@@ -22,6 +22,10 @@ local util = import './lib/util.libsonnet';
   // debugging helpers
   trace:: util.trace,
 
+  // get/set helpers
+  get:: helpers.getPath,
+  set:: helpers.setPath,
+
   // lib functions
   isConfig:: helpers.isConfig,
   isManifest:: helpers.isManifest,

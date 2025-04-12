@@ -22,5 +22,5 @@ local schema = t.object(
   }
 );
 
-
-schema.defaults(true)
+k.set(schema, 'properties.createSecretStore.type', 'value')
+// schema.defaults(true)
