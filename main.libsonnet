@@ -102,7 +102,7 @@ local util = import './lib/util.libsonnet';
     config.from(
       source=source,
       props=props,
-      private=util.trace(private, 'k.config')
+      private=private
     )
   ),
 

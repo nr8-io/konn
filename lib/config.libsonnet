@@ -94,7 +94,7 @@ local util = import './util.libsonnet';
     local ctx = context.new(props);
 
     self + {
-      private: util.trace(private, 'new'),
+      private: private,
       props:: props,
       args:: {
         render: render,

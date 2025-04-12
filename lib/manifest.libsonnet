@@ -160,7 +160,7 @@ local util = import './util.libsonnet';
     );
 
     // render the manifest
-    local manifest = util.trace(render(ctx, moreProps));  // render the manifest
+    local manifest = render(ctx, moreProps);  // render the manifest
 
     local configs = std.mapWithIndex(
       function(i, target) (
