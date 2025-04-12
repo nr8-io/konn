@@ -4,14 +4,14 @@ function(
   // defaults
   title=null,
   description=null,
-  default=null,
+  default={},
   required=null,
   requires=null,
   examples=null,
   deprecated=null,
 
   // object
-  properties=null,
+  properties={},
   patternProperties=null,
   additionalProperties=null,
   unevaluatedProperties=null,

@@ -204,8 +204,8 @@ local option = function(key, value, private=false) (
     ) + override
   ),
 
-  // access property by key
-  property(key):: (
+  // access object property by key
+  get(key=null):: (
     local type = self.type;
 
     if type == 'object' && std.objectHas(self.properties, key) then (
@@ -215,31 +215,20 @@ local option = function(key, value, private=false) (
     )
   ),
 
-  // access array item by key
-  item():: (
-    local type = self.type;
-
-    if type == 'array' && std.objectHas(self, 'items') then (
-      self.items
-    ) else (
-      null
-    )
-  ),
-
-
   // gets the default value for the property, used for filling defaults
-  defaults():: (
+  defaults(recursive=false, depth=0):: (
     local type = self.type;
 
-    if type == 'object' then (
+    if (type == 'object' && recursive == false && depth == 0) || type == 'object' && recursive == true then (
       local properties = self.properties;
       {
-        [x]: properties[x].defaults()
+        [x]: properties[x].defaults(recursive, depth + 1)
         for x in std.objectFields(properties)
-        if std.objectHas(properties[x], 'default')
       }
     ) else if std.objectHas(self, 'default') then (
       self.default
+    ) else (
+      null
     )
   ),
 
