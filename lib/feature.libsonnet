@@ -152,15 +152,7 @@ local manifest = import './manifest.libsonnet';
     )
   ),
 
-  // resolve overrides
-  overrides(props):: props,
-
-  // override props with a function or object
-  // overrides supersede the original and render prop
   override(propsOrFunction):: (
-    // original extension resolver
-    local overrides = self.overrides;
-
     // override with function and parent props
     local overrideWith = function(props) (
       if std.isFunction(propsOrFunction) then (
@@ -170,10 +162,16 @@ local manifest = import './manifest.libsonnet';
       )
     );
 
-    // supply overrides to be computed at render
-    self {
-      overrides(props):: std.mergePatch(overrides(props), overrideWith(props)),
-    }
+    if std.objectHasAll(self, 'overrides') then (
+      local overrides = self.overrides;
+      self {
+        overrides(props):: std.mergePatch(overrides(props), overrideWith(props)),
+      }
+    ) else (
+      self {
+        overrides(props):: overrideWith(props),
+      }
+    )
   ),
 
   // alias of override

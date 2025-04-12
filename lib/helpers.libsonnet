@@ -132,13 +132,10 @@ local render = function(target, props={}) (
 
 // merge props with target defaults and apply overrides
 local resolveProps = function(target, props={}) (
-  local merged = std.mergePatch(target.props, props);
-
-  // resolve with overrides
   if std.objectHasAll(target, 'overrides') && std.isFunction(target.overrides) then (
-    std.mergePatch(merged, target.overrides(merged))
+    std.mergePatch(target.props, target.overrides(props))
   ) else (
-    merged
+    std.mergePatch(target.props, props)
   )
 );
 
