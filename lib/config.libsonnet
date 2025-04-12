@@ -8,11 +8,11 @@ local util = import './util.libsonnet';
 
   // create a new config from and object or renderable object
   // if the source is a config it will return the original source
-  from(source, props={}, schema=null):: (
+  from(source, props={}, private=false):: (
     if lib.isConfig(source) then (
       source
     ) else if std.isFunction(source) then (
-      self.new(source, props, schema)
+      self.new(source, props, private)
     ) else if std.isObject(source) then (
       // create a manifest render function to handle the source
       local render = function(ctx, props) (
@@ -35,11 +35,11 @@ local util = import './util.libsonnet';
         props
       );
 
-      self.new(render, moreProps, schema)
+      self.new(render, moreProps, private)
     ) else if std.isString(source) && std.startsWith(source, '{') then (
-      self.fromJson(source, props, schema)
+      self.fromJson(source, props)
     ) else if std.isString(source) then (
-      self.fromYaml(source, props, schema)
+      self.fromYaml(source, props)
     ) else (
       error 'Invalid config source'
     )
@@ -49,7 +49,6 @@ local util = import './util.libsonnet';
   fromYaml(
     yaml,
     props={},
-    schema=null
   ):: (
     self.new(
       function(ctx, props) (
@@ -70,7 +69,6 @@ local util = import './util.libsonnet';
   fromJson(
     json,
     props={},
-    schema=null
   ):: (
     self.new(
       function(ctx, props) (
@@ -91,18 +89,19 @@ local util = import './util.libsonnet';
   new(
     render=function(ctx, props) {},
     props={},
-    schema=null
+    private=false,  // transparent config used by extensions
   ):: (
     local ctx = context.new(props);
 
     self + {
-      body: self.render(ctx, props),
-      schema: schema,
+      private: util.trace(private, 'new'),
       props:: props,
       args:: {
         render: render,
         props: props,
       },
+    } + {
+      body: self.render(ctx, props),
     }
   ),
 
@@ -114,7 +113,7 @@ local util = import './util.libsonnet';
   ),
 
   //
-  extend(fn, props={}, schema=self.schema):: (
+  extend(fn, props={}):: (
     local config = self.args.render(context.new(props), props);
     local moreProps = lib.resolveProps(self, props);
 
@@ -123,7 +122,7 @@ local util = import './util.libsonnet';
         fn(ctx, config, props)
       ),
       moreProps,
-      schema
+      self.private
     )
   ),
 
@@ -139,12 +138,18 @@ local util = import './util.libsonnet';
     );
 
     local render = function(ctx, props) (
-      self.args.render(ctx, overrideWith(props))
+      local resolvedProps = lib.resolveProps(self, props);
+      local moreProps = overrideWith(resolvedProps);
+
+      self.args.render(ctx, moreProps)
     );
 
-    self.new(render, self.props)
+    self.new(render, self.props, self.private)
   ),
 
+  // alias of override
+  apply(propsOrFunction):: self.override(propsOrFunction),
+  configure(propsOrFunction):: self.override(propsOrFunction),
 
   // get a value from the config body
   get(path, defaultValue=null):: lib.getPath(self.body, path, defaultValue),

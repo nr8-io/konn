@@ -16,13 +16,11 @@ local manifest = import './manifest.libsonnet';
     extensions=[],
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
-    schema=null
   ):: (
     local ctx = context.new(defaults);
 
     self + {
       body: self.init(defaults),
-      schema: schema,
       configs:: self.resolve(ctx, defaults),
       profiles:: {
         default: {},  // so we can render without a profile
@@ -151,21 +149,7 @@ local manifest = import './manifest.libsonnet';
     local resolved = std.flattenArrays(
       std.map(
         function(source) (
-          if lib.isResolvable(source) then (
-            source.resolve(ctx, moreProps)
-          )
-          else if lib.isRenderable(source) then (
-            [source.override(moreProps)]
-          )
-          else if std.isArray(source) then (
-            manifest.from(source).resolve(ctx, moreProps)
-          )
-          else if std.isObject(source) then (
-            [config.from(source, moreProps)]
-          )
-          else (
-            error 'Invalid config source'
-          )
+          manifest.from(source).resolve(ctx, moreProps)
         ),
         configs
       )
@@ -276,7 +260,7 @@ local manifest = import './manifest.libsonnet';
       map=function(ctx, config, props) (
         map(ctx, self.args.map(ctx, config, props), props)
       ),
-      schema=schema
+
     )
   ),
 

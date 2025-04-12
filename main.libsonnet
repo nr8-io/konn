@@ -53,9 +53,15 @@ local util = import './lib/util.libsonnet';
     extensions=[],
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
-    schema=null
   ):: (
-    app.new(features, defaults, profiles, extensions, filter, map, schema)
+    app.new(
+      features=features,
+      defaults=defaults,
+      profiles=profiles,
+      extensions=extensions,
+      filter=filter,
+      map=map
+    )
   ),
 
   feature(
@@ -64,27 +70,40 @@ local util = import './lib/util.libsonnet';
     extensions=[],
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
-    schema=null
   ):: (
-    feature.new(configs, props, extensions, filter, map, schema)
+    feature.new(
+      configs=configs,
+      props=props,
+      extensions=extensions,
+      filter=filter,
+      map=map
+    )
   ),
 
   manifest(
-    render=function(ctx, props) [],  // render function
+    source=function(ctx, props) [],
     props={},
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
-    schema=null
   ):: (
-    manifest.from(render, props, filter, map, schema)
+    manifest.from(
+      source=source,
+      props=props,
+      filter=filter,
+      map=map
+    )
   ),
 
   config(
-    render=function(ctx, props) {},
+    source=function(ctx, props) {},
     props={},
-    schema=null
+    private=false
   ):: (
-    config.from(render, props, schema)
+    config.from(
+      source=source,
+      props=props,
+      private=util.trace(private, 'k.config')
+    )
   ),
 
   extension(
@@ -92,9 +111,12 @@ local util = import './lib/util.libsonnet';
     props={},  // extension default props
     selector=function(ctx, config, props) true,  // selector function
     extends=config.new(),  // renderable config or manifest to extend
-    schema=null
   ):: (
-    extension.new(render, props, selector, extends, schema)
+    extension.new(
+      render=render,
+      props=props,
+      selector=selector,
+      extends=extends
+    )
   ),
-
 }

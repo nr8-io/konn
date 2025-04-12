@@ -14,21 +14,20 @@ local util = import './util.libsonnet';
     props={},
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
-    schema=null
   ):: (
     if lib.isManifest(source) then (
       source
     ) else if std.isFunction(source) then (
-      self.new(source, props, filter, map, schema)
+      self.new(source, props, filter, map)
     ) else if std.isArray(source) || std.isObject(source) then (
       // create a manifest render function to handle the source
       local render = function(ctx, props) (
         if std.isArray(source) then (
           std.map(function(item) (
-            config.from(item).render(ctx, props)
+            config.from(item)
           ), source)
         ) else (
-          [config.from(source).render(ctx, props)]
+          [config.from(source)]
         )
       );
 
@@ -39,11 +38,11 @@ local util = import './util.libsonnet';
         props
       );
 
-      self.new(render, props, filter, map, schema)
+      self.new(render, props, filter, map)
     ) else if std.isString(source) && (std.startsWith(source, '[') || std.startsWith(source, '{')) then (
-      self.fromJson(source, props, schema)
+      self.fromJson(source, props)
     ) else if std.isString(source) then (
-      self.fromYaml(source, props, schema)
+      self.fromYaml(source, props)
     ) else (
       error 'Invalid config source'
     )
@@ -57,7 +56,6 @@ local util = import './util.libsonnet';
     map=function(ctx, config, props) config,
     single=false,
     template=true,
-    schema=null
   ):: (
     self.new(
       function(ctx, props) (
@@ -77,7 +75,6 @@ local util = import './util.libsonnet';
       props,
       filter,
       map,
-      schema,
     )
   ),
 
@@ -87,7 +84,6 @@ local util = import './util.libsonnet';
     props={},
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
-    schema=null,
   ):: (
     self.new(
       function(ctx, props) (
@@ -106,8 +102,7 @@ local util = import './util.libsonnet';
       ),
       props,
       filter,
-      map,
-      schema,
+      map
     )
   ),
 
@@ -117,13 +112,11 @@ local util = import './util.libsonnet';
     props={},
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
-    schema=null
   ):: (
     local ctx = context.new(props);
 
     self + {
       body: self.render(ctx, props),
-      schema: schema,
       configs:: self.resolve(ctx, props),
       props:: props,
       args:: {
@@ -167,19 +160,16 @@ local util = import './util.libsonnet';
     );
 
     // render the manifest
-    local manifest = render(ctx, moreProps);  // render the manifest
+    local manifest = util.trace(render(ctx, moreProps));  // render the manifest
 
-    // create configs from all of the rendered manifest objects
     local configs = std.mapWithIndex(
       function(i, target) (
-        config.new(
-          function(ctx, ignoredProps) (
-            if manifest[i] != null then (
-              config.from(manifest[i]).render(ctx, moreProps)
-            )
-          ),
-          // inherit default props from manifest defaults
-          self.props
+        if lib.isConfig(target) then (
+          target.override(function(props) (
+            std.mergePatch(props, moreProps)
+          ))
+        ) else if manifest[i] != null then (
+          config.from(manifest[i], self.props)
         )
       ),
       manifest
@@ -188,7 +178,10 @@ local util = import './util.libsonnet';
     // apply custom filter and remove any empty configs
     local filtered = std.filter(
       function(config) (
-        if std.length(std.objectFields(config)) > 0 then (
+        // remove private configs
+        if std.objectHasAll(config, 'private') && config.private then (
+          false
+        ) else if std.length(std.objectFields(config)) > 0 then (
           self.args.filter(ctx, config, moreProps)
         ) else (
           false
@@ -207,7 +200,6 @@ local util = import './util.libsonnet';
     props={},
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
-    schema=self.schema
   ):: (
     local manifest = self.render(context.new(props), props);
 
@@ -222,7 +214,6 @@ local util = import './util.libsonnet';
       map=function(ctx, config, props) (
         map(ctx, self.args.map(ctx, config, props), props)
       ),
-      schema=schema,
     )
   ),
 
