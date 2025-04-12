@@ -166,7 +166,7 @@ local util = import './util.libsonnet';
       function(i, target) (
         if lib.isConfig(target) then (
           target.override(function(props) (
-            std.mergePatch(props, moreProps)
+            lib.resolveProps(self, props)
           ))
         ) else if manifest[i] != null then (
           config.from(manifest[i], self.props)

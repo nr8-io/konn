@@ -149,7 +149,12 @@ local manifest = import './manifest.libsonnet';
     local resolved = std.flattenArrays(
       std.map(
         function(source) (
-          manifest.from(source).resolve(ctx, moreProps)
+          if lib.isResolvable(source) then (
+            source.resolve(ctx, moreProps)
+          )
+          else (
+            manifest.from(source).resolve(ctx, moreProps)
+          )
         ),
         configs
       )
