@@ -251,6 +251,7 @@ local util = import './util.libsonnet';
   ),
 
   // alias of override
+  apply(propsOrFunction):: self.override(propsOrFunction),
   configure(propsOrFunction):: self.override(propsOrFunction),
 
   // returns an extended manifest with a filter applied

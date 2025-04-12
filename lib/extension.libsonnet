@@ -65,8 +65,8 @@ local lib = import './helpers.libsonnet';
     self.args.selector(ctx, config, props)
   ),
 
-  // apply the extension to a config
-  apply(ctx=context.new(), config=config.new(), props={}):: (
+  // inject the extension to a config
+  inject(ctx=context.new(), config=config.new(), props={}):: (
     local render = self.args.render;
     local resolvedProps = lib.resolveProps(self, props);
 
@@ -126,6 +126,7 @@ local lib = import './helpers.libsonnet';
   ),
 
   // alias of override
+  apply(propsOrFunction):: self.override(propsOrFunction),
   configure(propsOrFunction):: self.override(propsOrFunction),
 
 }

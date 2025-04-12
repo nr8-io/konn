@@ -6,7 +6,7 @@ local applyExtensions = function(extensions, ctx, configs, props={}) (
     function(config) (
       std.foldl(
         function(target, extension) (
-          extension.apply(
+          extension.inject(
             ctx,
             target,
             props
