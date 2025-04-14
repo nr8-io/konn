@@ -179,9 +179,7 @@ local util = import './util.libsonnet';
     local filtered = std.filter(
       function(config) (
         // remove private configs
-        if std.objectHasAll(config, 'private') && config.private then (
-          false
-        ) else if std.length(std.objectFields(config)) > 0 then (
+        if std.length(std.objectFields(config)) > 0 then (
           self.args.filter(ctx, config, moreProps)
         ) else (
           false

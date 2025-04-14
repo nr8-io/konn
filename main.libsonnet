@@ -96,13 +96,11 @@ local util = import './lib/util.libsonnet';
 
   config(
     source=function(ctx, props) {},
-    props={},
-    private=false
+    props={}
   ):: (
     config.from(
       source=source,
-      props=props,
-      private=private
+      props=props
     )
   ),
 

@@ -8,11 +8,11 @@ local util = import './util.libsonnet';
 
   // create a new config from and object or renderable object
   // if the source is a config it will return the original source
-  from(source, props={}, private=false):: (
+  from(source, props={}):: (
     if lib.isConfig(source) then (
       source
     ) else if std.isFunction(source) then (
-      self.new(source, props, private)
+      self.new(source, props)
     ) else if std.isObject(source) then (
       // create a manifest render function to handle the source
       local render = function(ctx, props) (
@@ -35,7 +35,7 @@ local util = import './util.libsonnet';
         props
       );
 
-      self.new(render, moreProps, private)
+      self.new(render, moreProps)
     ) else if std.isString(source) && std.startsWith(source, '{') then (
       self.fromJson(source, props)
     ) else if std.isString(source) then (
@@ -89,19 +89,16 @@ local util = import './util.libsonnet';
   new(
     render=function(ctx, props) {},
     props={},
-    private=false,  // transparent config used by extensions
   ):: (
     local ctx = context.new(props);
 
     self + {
-      private: private,
+      body: self.render(ctx, props),
       props:: props,
       args:: {
         render: render,
         props: props,
       },
-    } + {
-      body: self.render(ctx, props),
     }
   ),
 
@@ -121,8 +118,7 @@ local util = import './util.libsonnet';
       function(ctx, props) (
         fn(ctx, config, props)
       ),
-      moreProps,
-      self.private
+      moreProps
     )
   ),
 
@@ -144,7 +140,7 @@ local util = import './util.libsonnet';
       self.args.render(ctx, moreProps)
     );
 
-    self.new(render, self.props, self.private)
+    self.new(render, self.props)
   ),
 
   // alias of override

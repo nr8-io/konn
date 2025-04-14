@@ -1,11 +1,16 @@
 local k = import './main.libsonnet';
 
-k.app(features=[
-  k.manifest(
-    function(ctx, props) [props],
-  ),
-], defaults={
-  test: 7,
-  banana: 6,
-  eat: 6,
+
+local cfg = k.config(function(ctx, props) { test: props.test, test2: props.test2 }, { test: 1, test2: 2 });
+
+k.feature([
+  cfg,
+  k.manifest(function(ctx, props) [props]),
+  function(ctx, props) props,
+  '[{}]',
+  '{}',
+  'banana: one',
+  '- banana: two\n- banana: three',
+], {
+  test: 2,
 })
