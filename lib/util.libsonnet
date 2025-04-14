@@ -87,6 +87,23 @@ local trace = function(target, message='', return=function() null) (
   std.trace(message + ' ' + std.manifestJson(target), returnValue)
 );
 
+local is = function(body, kind, name=null) (
+  local kinds = if std.isArray(kind) then kind else [kind];
+
+  if std.type(name) != 'null' then (
+    local names = if std.isArray(name) then name else [name];
+
+    // before accessing self.body.kind checks self.body for kind
+    std.objectHas(body, 'kind') &&
+    std.count(kinds, body.kind) > 0 &&
+    // before accessing name checks if body.metadata exists
+    std.count(names, body.metadata.name) > 0
+  ) else (
+    // makes sure body has kind in it
+    std.objectHas(body, 'kind') && std.count(kinds, body.kind) > 0
+  )
+);
+
 
 {
   // conditional helpers
@@ -94,6 +111,9 @@ local trace = function(target, message='', return=function() null) (
   onlyIfArr:: onlyIfArr,
   onlyIfHas:: onlyIfHas,
   onlyIfHasArr:: onlyIfHasArr,
+
+  // config helper
+  is:: is,
 
   // templating helpers
   template:: template,

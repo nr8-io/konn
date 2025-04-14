@@ -2,6 +2,7 @@ local config = import './config.libsonnet';
 local context = import './context.libsonnet';
 local lib = import './helpers.libsonnet';
 local manifest = import './manifest.libsonnet';
+local util = import './util.libsonnet';
 
 // Feature
 {
@@ -34,22 +35,28 @@ local manifest = import './manifest.libsonnet';
 
   // render the config with resolved props
   render(
-    ctx=context.new(self.args.props, self.args.config),
+    ctx=context.new(self.args.props, self.configs),
     props=self.args.props
   ):: (
     local moreProps = lib.resolveProps(self, props);
     local configs = self.resolve(ctx, props);
 
+    // context with resolved manifests
+    local resolvedCtx = ctx.extend(moreProps, util.trace(configs));
+
     // apply extensions to the resolved configs
     local extended = lib.applyExtensions(
-      self.extensions(ctx, moreProps),
-      ctx,
+      self.extensions(resolvedCtx, moreProps),
+      resolvedCtx,
       configs,
       moreProps
     );
 
+    // context with extended configs
+    local extendedCtx = ctx.extend(moreProps, extended);
+
     //render all resolved configs
-    lib.renderConfigs(ctx, extended, moreProps)
+    lib.renderConfigs(extendedCtx, extended, moreProps)
   ),
 
   // resolve individual configs
@@ -106,7 +113,7 @@ local manifest = import './manifest.libsonnet';
 
   //
   extensions(
-    ctx=context.new(self.args.props, self.args.config),
+    ctx=context.new(self.args.props, self.configs),
     props=self.args.props
   ):: (
     local moreProps = lib.resolveProps(self, props);

@@ -134,10 +134,11 @@ local util = import './util.libsonnet';
     props=self.args.props
   ):: (
     local moreProps = lib.resolveProps(self, props);
-    local configs = self.resolve(ctx, props);
+    local configs = self.resolve(ctx, moreProps);
+    local renderCtx = ctx.extend(moreProps, configs);
 
     //render all resolved configs
-    lib.renderConfigs(ctx, configs, moreProps)
+    lib.renderConfigs(renderCtx, configs, moreProps)
   ),
 
   // resolve individual configs

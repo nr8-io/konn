@@ -11,5 +11,8 @@
 	"bugs": {
 		"url": "https://github.com/nr8-io/konn/issues"
 	},
-	"homepage": "https://github.com/nr8-io/konn#readme"
+	"homepage": "https://github.com/nr8-io/konn#readme",
+	"devDependencies": {
+		"konn": "file:./"
+	}
 }

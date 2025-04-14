@@ -1,6 +1,7 @@
 local config = import './config.libsonnet';
 local context = import './context.libsonnet';
 local lib = import './helpers.libsonnet';
+local util = import './util.libsonnet';
 
 // Extension
 {
@@ -69,7 +70,8 @@ local lib = import './helpers.libsonnet';
     local resolvedProps = lib.resolveProps(self, props);
 
     if self.selector(ctx, config, resolvedProps) then (
-      config.extend(function(ctx, target, moreProps) (
+      config.extend(function(_, target, moreProps) (
+        // render with extension context and props
         render(ctx, target, resolvedProps)
       ))
     ) else (

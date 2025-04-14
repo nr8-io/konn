@@ -152,20 +152,7 @@ local util = import './util.libsonnet';
 
   // is the config a specific kind and name/kubernetes resource
   is(kind, name=null):: (
-    local kinds = if std.isArray(kind) then kind else [kind];
-
-    if std.type(name) != 'null' then (
-      local names = if std.isArray(name) then name else [name];
-
-      // before accessing self.body.kind checks self.body for kind
-      std.objectHas(self.body, 'kind') &&
-      std.count(kinds, self.body.kind) > 0 &&
-      // before accessing name checks if body.metadata exists
-      std.count(names, self.body.metadata.name) > 0
-    ) else (
-      // makes sure body has kind in it
-      std.objectHas(self.body, 'kind') && std.count(kinds, self.body.kind) > 0
-    )
+    util.is(self.body, kind, name)
   ),
 
 }

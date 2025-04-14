@@ -38,22 +38,28 @@ local manifest = import './manifest.libsonnet';
 
   // render the config with resolved props
   render(
-    ctx=context.new(self.args.defaults, self.args.config),
+    ctx=context.new(self.args.defaults, self.configs),
     props=self.args.defaults
   ):: (
     local moreProps = std.mergePatch(self.args.defaults, props);
     local configs = self.resolve(ctx, props);
 
+    // context with resolved manifests
+    local resolvedCtx = ctx.extend(moreProps, configs);
+
     // apply extensions to the resolved configs
     local extended = lib.applyExtensions(
-      self.extensions(ctx, moreProps),
-      ctx,
+      self.extensions(resolvedCtx, moreProps),
+      resolvedCtx,
       configs,
       moreProps
     );
 
+    // context with extended configs
+    local extendedCtx = ctx.extend(moreProps, extended);
+
     //render all resolved configs
-    lib.renderConfigs(ctx, extended, moreProps)
+    lib.renderConfigs(extendedCtx, extended, moreProps)
   ),
 
   // render with profile
@@ -75,7 +81,7 @@ local manifest = import './manifest.libsonnet';
     local moreProps = std.mergePatch(defaultProps, props);
 
     // render context with profile metadata
-    local ctx = context.new(moreProps, metadata={
+    local ctx = context.new(moreProps, self.configs, metadata={
       profile: profile,
     });
 
@@ -204,7 +210,7 @@ local manifest = import './manifest.libsonnet';
 
   //
   extensions(
-    ctx=context.new(self.args.defaults, self.args.manifest),
+    ctx=context.new(self.args.defaults, self.configs),
     props=self.args.defaults
   ):: (
     local moreProps = std.mergePatch(self.args.defaults, props);
@@ -247,7 +253,7 @@ local manifest = import './manifest.libsonnet';
   // extend the manifest
   extend(
     features=[],
-    props={},
+    defaults={},
     profiles={},
     extensions=[],
     filter=function(ctx, config, props) true,
@@ -256,7 +262,7 @@ local manifest = import './manifest.libsonnet';
   ):: (
     self.new(
       features=self.args.features + features,
-      props=std.mergePatch(self.args.defaults, props),
+      defaults=std.mergePatch(self.args.defaults, defaults),
       profiles=std.mergePatch(self.args.profiles, profiles),
       extensions=self.args.extensions + extensions,
       filter=function(ctx, config, props) (
@@ -265,7 +271,6 @@ local manifest = import './manifest.libsonnet';
       map=function(ctx, config, props) (
         map(ctx, self.args.map(ctx, config, props), props)
       ),
-
     )
   ),
 
@@ -274,7 +279,7 @@ local manifest = import './manifest.libsonnet';
     self.extend(filter=fn)
   ),
 
-  // returns an extened manifest with a map function applied
+  // returns an extended manifest with a map function applied
   map(fn):: (
     self.extend(map=fn)
   ),

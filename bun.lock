@@ -1,0 +1,16 @@
+{
+  "lockfileVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "konn",
+      "devDependencies": {
+        "konn": "file:./",
+      },
+    },
+  },
+  "packages": {
+    "konn": ["konn@file:", { "devDependencies": { "konn": "file:./" } }],
+
+    "konn/konn": ["konn@file:.", {}],
+  }
+}

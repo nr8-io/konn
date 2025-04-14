@@ -1,4 +1,5 @@
 local context = import './context.libsonnet';
+local util = import './util.libsonnet';
 
 // apply extensions to configs with props
 local applyExtensions = function(extensions, ctx, configs, props={}) (

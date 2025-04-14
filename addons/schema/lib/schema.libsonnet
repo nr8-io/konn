@@ -1,6 +1,8 @@
 local property = import './property.libsonnet';
 
 function(
+  id,
+
   // defaults
   title=null,
   description=null,
@@ -10,8 +12,6 @@ function(
   examples=null,
   deprecated=null,
 
-  // schema specific
-  id=null,
   schema='https://json-schema.org/draft/2020-12/schema',
 
   // object
@@ -26,7 +26,7 @@ function(
   // advanced overrides
   override={},
 ) (
-  property.new(
+  local spec = property.new(
     type='object',
 
     title=title,
@@ -47,13 +47,17 @@ function(
 
     // add schema specific properties
     override=override {
+      '$id': 'konn:schema:' + id,
       '$schema': schema,
-    } + if (id != null) then (
-      {
-        '$id': id,
-      }
-    ) else (
-      {}
-    )
-  )
+    }
+  );
+
+  {
+    apiVersion: 'konn.nr8.io/v1alpha1',
+    kind: 'JsonSchema',
+    metadata: {
+      name: id,
+    },
+    spec: spec,
+  }
 )

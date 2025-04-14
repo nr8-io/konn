@@ -19,7 +19,10 @@ local util = import './lib/util.libsonnet';
   json:: util.json,
   template:: util.template,
 
-  // debugging helpers
+  // config helpers
+  is:: util.is,  // kind check
+
+  // debugging helpersR
   trace:: util.trace,
 
   // get/set helpers

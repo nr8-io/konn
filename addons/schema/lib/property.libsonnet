@@ -186,24 +186,6 @@ local option = function(key, value, private=false) (
     )
   ),
 
-  // render property as schema
-  schema(
-    // schema specific
-    override={},
-    schema='https://json-schema.org/draft/2020-12/schema',
-    id=null,
-  ):: (
-    self {
-      '$schema': schema,
-    } + if (id != null) then (
-      {
-        '$id': id,
-      }
-    ) else (
-      {}
-    ) + override
-  ),
-
   // access object property by key
   get(key=null):: (
     local type = self.type;
