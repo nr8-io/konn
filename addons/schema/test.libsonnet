@@ -27,51 +27,6 @@ local bwFeat = k.feature([
   bwSchema,
 ]);
 
-local ext = k.extension(
-  function(ctx, target, props) (
-    // filter out json schemas
-    if k.is(target, 'JsonSchema') then (
-      if props.enabled && k.is(target, 'JsonSchema', props.schema.metadata.name) then (
-        target
-      ) else (
-        null
-      )
-    ) else if !props.enabled then (
-      target  // filter out regular configs
-    ) else (
-      null
-    )
-  ),
-  {
-    enabled: false,
-  }
-);
-
-local schemaMan = k.manifest(
-  [
-    function(ctx, props) {
-      props: props,
-
-    },
-    k.config(function(ctx, props) {
-      props: props,
-    }, {
-      config: true,
-    }),
-  ],
-  {
-    // schema: t.schema('root'),
-    enabled: false,
-    man: true,
-  },
-  // extensions=[
-  //   function(ctx, props) ext.apply({
-  //     schema: props.schema,
-  //     enabled: props.enabled,
-  //   }),
-  // ]
-);
-
 
 local appSchema = t.schema(
   id='app',
@@ -84,21 +39,23 @@ local appSchema = t.schema(
 );
 
 
-local schemaFeat = k.feature([
-  schemaMan,
-], {
-  enabled: false,
-  feat: true,
-});
-
-
-k.app(
+local app = k.app(
   [
-    schemaFeat,
-    {},
+    function(ctx, props) t.generateJsonSchema.apply({
+      generate: props.generateSchema,
+    }),
+
+    bwFeat,
+
+    {
+      not: 'banana',
+    },
   ],
   {
-    app: true,
-    enabled: true,
+    generateSchema: false,
   }
-).init()
+);
+
+app.render(props={
+  generateSchema: true,
+})

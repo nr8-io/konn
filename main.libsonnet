@@ -39,6 +39,9 @@ local util = import './lib/util.libsonnet';
   fromYaml:: manifest.fromYaml,
   fromJson:: manifest.fromJson,
 
+  // render
+  render:: helpers.renderConfigs,
+
   // lib exports
   lib:: {
     app: app,

@@ -140,7 +140,7 @@ local util = import './util.libsonnet';
     local resolvedCtx = ctx.extend(moreProps, configs);
 
     //render all resolved configs
-    lib.renderConfigs(util.trace(resolvedCtx), configs, moreProps)
+    lib.renderConfigs(resolvedCtx, configs, moreProps)
   ),
 
   // resolve individual configs
@@ -192,7 +192,7 @@ local util = import './util.libsonnet';
     );
 
     // apply custom map function the filtered configs
-    lib.mapConfigs(self.args.map, util.trace(filtered))
+    lib.mapConfigs(self.args.map, filtered)
   ),
 
   // extend the manifest

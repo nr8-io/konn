@@ -26,6 +26,9 @@ local lib = import './helpers.libsonnet';
     )
   ),
 
+  // return all configs
+  manifest():: self.args.manifest,
+
   // Filter manifests by a function
   filter(func):: (
     std.filter(
