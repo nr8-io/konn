@@ -52,6 +52,7 @@ function(
     }
   );
 
+  // render as a kubernetes compatible CRD
   {
     apiVersion: 'konn.nr8.io/v1alpha1',
     kind: 'JsonSchema',
@@ -59,5 +60,9 @@ function(
       name: id,
     },
     spec: spec,
+  } + {
+    // inherit methods from property
+    get:: spec.get,
+    defaults:: spec.defaults,
   }
 )
