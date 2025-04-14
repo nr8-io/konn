@@ -90,15 +90,14 @@ local util = import './util.libsonnet';
     render=function(ctx, props) {},
     props={},
   ):: (
-    local ctx = context.new(props);
-
     self + {
-      body: self.render(ctx, props),
       props:: props,
       args:: {
         render: render,
         props: props,
       },
+    } + {
+      body: self.render(context.new(props), props),
     }
   ),
 
@@ -106,7 +105,7 @@ local util = import './util.libsonnet';
   render(ctx=context.new(self.args.props), props={}):: (
     local resolvedProps = lib.resolveProps(self, props);
 
-    self.args.render(ctx, resolvedProps)
+    self.args.render(ctx, resolvedProps { banana: 1 })
   ),
 
   //
@@ -123,7 +122,7 @@ local util = import './util.libsonnet';
   ),
 
   //
-  override(propsOrFunction):: (
+  override(ctx, propsOrFunction):: (
     // override with function and parent props
     local overrideWith = function(props) (
       if std.isFunction(propsOrFunction) then (
@@ -133,7 +132,7 @@ local util = import './util.libsonnet';
       )
     );
 
-    local render = function(ctx, props) (
+    local render = function(_, props) (
       local resolvedProps = lib.resolveProps(self, props);
       local moreProps = overrideWith(resolvedProps);
 
@@ -142,10 +141,6 @@ local util = import './util.libsonnet';
 
     self.new(render, self.props)
   ),
-
-  // alias of override
-  apply(propsOrFunction):: self.override(propsOrFunction),
-  configure(propsOrFunction):: self.override(propsOrFunction),
 
   // get a value from the config body
   get(path, defaultValue=null):: lib.getPath(self.body, path, defaultValue),

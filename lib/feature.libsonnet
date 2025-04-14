@@ -15,13 +15,9 @@ local util = import './util.libsonnet';
     extensions=[],
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
-
   ):: (
-    local ctx = context.new(props);
-
     self + {
-      body: self.render(ctx, props),
-      configs:: self.resolve(ctx, props),
+      configs:: self.resolve(context.new(props), props),
       props:: props,
       args:: {
         configs: configs,
@@ -30,6 +26,8 @@ local util = import './util.libsonnet';
         filter: filter,
         map: map,
       },
+    } + {
+      body: self.render(context.new(props, self.configs), props),
     }
   ),
 
@@ -42,7 +40,7 @@ local util = import './util.libsonnet';
     local configs = self.resolve(ctx, props);
 
     // context with resolved manifests
-    local resolvedCtx = ctx.extend(moreProps, util.trace(configs));
+    local resolvedCtx = ctx.extend(moreProps, configs);
 
     // apply extensions to the resolved configs
     local extended = lib.applyExtensions(

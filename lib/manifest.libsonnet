@@ -27,7 +27,9 @@ local util = import './util.libsonnet';
             config.from(item)
           ), source)
         ) else (
-          [config.from(source)]
+          [
+            config.from(source),
+          ]
         )
       );
 
@@ -113,11 +115,8 @@ local util = import './util.libsonnet';
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
   ):: (
-    local ctx = context.new(props);
-
     self + {
-      body: self.render(ctx, props),
-      configs:: self.resolve(ctx, props),
+      configs:: self.resolve(context.new(props), props),
       props:: props,
       args:: {
         render: render,
@@ -125,20 +124,23 @@ local util = import './util.libsonnet';
         filter: filter,
         map: map,
       },
+    } + {
+      body: self.render(context.new(props, self.configs), props),
     }
   ),
 
   // render the config with resolved props
   render(
-    ctx=context.new(self.args.props, self.args.config),
+    ctx=context.new(self.args.props, self.configs),
     props=self.args.props
   ):: (
     local moreProps = lib.resolveProps(self, props);
     local configs = self.resolve(ctx, moreProps);
-    local renderCtx = ctx.extend(moreProps, configs);
+
+    local resolvedCtx = ctx.extend(moreProps, configs);
 
     //render all resolved configs
-    lib.renderConfigs(renderCtx, configs, moreProps)
+    lib.renderConfigs(util.trace(resolvedCtx), configs, moreProps)
   ),
 
   // resolve individual configs
@@ -166,11 +168,11 @@ local util = import './util.libsonnet';
     local configs = std.mapWithIndex(
       function(i, target) (
         if lib.isConfig(target) then (
-          target.override(function(props) (
-            lib.resolveProps(self, props)
+          target.override(ctx, function(props) (
+            std.mergePatch(moreProps, props)
           ))
         ) else if manifest[i] != null then (
-          config.from(manifest[i], self.props)
+          config.from(manifest[i], moreProps)
         )
       ),
       manifest
@@ -190,7 +192,7 @@ local util = import './util.libsonnet';
     );
 
     // apply custom map function the filtered configs
-    lib.mapConfigs(self.args.map, filtered)
+    lib.mapConfigs(self.args.map, util.trace(filtered))
   ),
 
   // extend the manifest

@@ -125,7 +125,7 @@ local renderConfigs = function(ctx=context.new(), configs=[], props={}) (
 // mostly used for testing
 local render = function(target, props={}) (
   if isRenderable(target) then (
-    target.render(context.new(target.args.props, target.args.configs), props)
+    target.render(context.new(target.props, target.configs), props)
   ) else (
     target
   )

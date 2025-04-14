@@ -17,11 +17,8 @@ local manifest = import './manifest.libsonnet';
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
   ):: (
-    local ctx = context.new(defaults);
-
     self + {
-      body: self.init(defaults),
-      configs:: self.resolve(ctx, defaults),
+      configs:: self.resolve(context.new(defaults), defaults),
       profiles:: {
         default: {},  // so we can render without a profile
       } + profiles,
@@ -33,6 +30,8 @@ local manifest = import './manifest.libsonnet';
         filter: filter,
         map: map,
       },
+    } + {
+      body: self.render(context.new(defaults, self.configs), defaults),
     }
   ),
 
