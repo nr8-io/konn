@@ -23,8 +23,20 @@ local applyExtensions = function(extensions, ctx, configs, props={}) (
 
 // get value from object by path using dot notation
 local getPath = function(obj, path, defaultValue=null) (
-  local keys = std.split(path, '.');  // Split the path by dots to get individual keys
+  // magic to support values inside of []
+  local sections = std.split(std.strReplace(std.strReplace('.' + path, '[', '%'), ']', '%'), '%');
 
+  // slit dot notation if not inside of [...] sections
+  local keys = std.filter(function(key) key != '', std.flatMap(function(part) (
+    if std.startsWith(part, '.') then (
+      std.split(part, '.')
+    ) else (
+      // remove ' and " if used in [...] sections
+      [std.strReplace(std.strReplace(part, "'", ''), '"', '')]
+    )
+  ), sections));
+
+  // get the nested value
   local get = function(o, k) (
     if std.length(k) == 0 then (
       o
@@ -41,7 +53,18 @@ local getPath = function(obj, path, defaultValue=null) (
 );
 
 local setPath = function(obj, path, value=null) (
-  local keys = std.split(path, '.');  // Split the path by dots to get individual keys
+  // magic to support values inside of []
+  local sections = std.split(std.strReplace(std.strReplace('.' + path, '[', '%'), ']', '%'), '%');
+
+  // slit dot notation if not inside of [...] sections
+  local keys = std.filter(function(key) key != '', std.flatMap(function(part) (
+    if std.startsWith(part, '.') then (
+      std.split(part, '.')
+    ) else (
+      // remove ' and " if used in [...] sections
+      [std.strReplace(std.strReplace(part, "'", ''), '"', '')]
+    )
+  ), sections));
 
   local set = function(o, k, value) (
     if std.length(k) == 0 then (

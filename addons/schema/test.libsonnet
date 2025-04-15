@@ -23,39 +23,41 @@ local bwSchema = t.schema(
   }
 );
 
-local bwFeat = k.feature([
-  bwSchema,
-]);
-
-
-local appSchema = t.schema(
-  id='app',
-  properties={
-    extensions: t.object('Extensions', 'Map of extensions to apply', properties={
-      schema: t.bool('Enable schema extension', default=false),
-    }),
-    bitwardenSecrets: t.ref('bitwarden-secrets'),
-  }
+local bwFeat = k.feature(
+  [
+    bwSchema,
+  ],
 );
 
+// local appSchema = t.schema(
+//   id='app',
+//   properties={
+//     extensions: t.object('Extensions', 'Map of extensions to apply', properties={
+//       schema: t.bool('Enable schema extension', default=false),
+//     }),
+//     bitwardenSecrets: t.ref('bitwarden-secrets'),
+//   }
+// );
 
 local app = k.app(
   [
+    function(ctx, props) (import 'konn-topvine/namespace/main.libsonnet').configure({
+      namespace: 'testing',
+    }),
+
     function(ctx, props) t.generateJsonSchema.apply({
       generate: props.generateSchema,
     }),
 
-    bwFeat,
-
     {
-      not: 'banana',
+      banana: true,
     },
+
+    bwFeat,
   ],
   {
     generateSchema: false,
   }
 );
 
-app.render(props={
-  generateSchema: true,
-})
+app.init({ generateSchema: false })

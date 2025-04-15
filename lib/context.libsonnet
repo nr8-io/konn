@@ -52,7 +52,7 @@ local lib = import './helpers.libsonnet';
   get(path, test):: (
     self.find(
       function(config) (
-        lib.getPath(config, path) == test
+        lib.getPath(config.body, path) == test
       )
     )
   ),
@@ -61,7 +61,7 @@ local lib = import './helpers.libsonnet';
   kget(kind, name=''):: (
     self.find(
       function(config) (
-        config.kind == kind && config.metadata.name == name
+        config.body.kind == kind && config.body.metadata.name == name
       )
     )
   ),
@@ -70,7 +70,7 @@ local lib = import './helpers.libsonnet';
   has(path, test):: (
     self.find(
       function(config) (
-        lib.getPath(config, path) == test
+        lib.getPath(config.body, path) == test
       )
     ) != null
   ),
@@ -79,11 +79,11 @@ local lib = import './helpers.libsonnet';
   khas(kind, name=null):: (
     self.find(
       function(config) (
-        if (std.objectHas(config, 'kind')) then (
+        if (std.objectHas(config.body, 'kind')) then (
           if std.isString(name) then (
-            config.kind == kind && config.metadata.name == name
+            config.body.kind == kind && config.body.metadata.name == name
           ) else (
-            config.kind == kind
+            config.body.kind == kind
           )
         ) else (
           false

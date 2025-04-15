@@ -105,7 +105,7 @@ local util = import './util.libsonnet';
   render(ctx=context.new(self.args.props), props={}):: (
     local resolvedProps = lib.resolveProps(self, props);
 
-    self.args.render(ctx, resolvedProps { banana: 1 })
+    self.args.render(ctx, resolvedProps)
   ),
 
   //

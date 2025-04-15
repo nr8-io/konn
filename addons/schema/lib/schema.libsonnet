@@ -1,4 +1,5 @@
 local property = import './property.libsonnet';
+local k = import 'konn/main.libsonnet';
 
 function(
   id,
@@ -22,6 +23,9 @@ function(
   propertyNames=null,
   minProperties=null,
   maxProperties=null,
+
+  // root schema
+  root=false,
 
   // advanced overrides
   override={},
@@ -52,17 +56,24 @@ function(
     }
   );
 
-  // render as a kubernetes compatible CRD
-  {
-    apiVersion: 'konn.nr8.io/v1alpha1',
-    kind: 'JsonSchema',
-    metadata: {
-      name: id,
-    },
-    spec: spec,
-  } + {
-    // inherit methods from property
-    get:: spec.get,
+  // create a konn config and render as a kubernetes compatible CRD
+  k.manifest(
+    function(ctx, props) [
+      {
+        apiVersion: 'konn.nr8.io/v1alpha1',
+        kind: 'JsonSchema',
+        metadata+: {
+          name: id,
+        },
+        spec: spec,
+      },
+    ],
+    // filter out schemas unless the schema feature is included
+    filter=function(ctx, target, props) (
+      ctx.has('metadata.annotations[konn.nr8.io/json-schema]', 'root') || root
+    )
+  ) + {
     defaults:: spec.defaults,
+    property:: spec.get,
   }
 )

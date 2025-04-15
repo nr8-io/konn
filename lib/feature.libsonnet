@@ -126,7 +126,9 @@ local util = import './util.libsonnet';
             extension(ctx, moreProps)
           )
           else (
-            extension
+            extension.override(function(props) (
+              std.mergePatch(moreProps, props)
+            ))
           )
         ),
         self.args.extensions
@@ -212,10 +214,14 @@ local util = import './util.libsonnet';
   ),
 
   // get a specific config by kind and metadata name
-  kget(kind, name=''):: (
+  kget(kind, name=null):: (
     self.find(
       function(ctx, config, props) (
-        config.body.kind == kind && config.body.metadata.name == name
+        if std.type(name) != 'null' then (
+          config.body.kind == kind && config.body.metadata.name == name
+        ) else (
+          config.body.kind == kind
+        )
       )
     )
   ),

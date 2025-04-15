@@ -12,8 +12,18 @@ local k = import 'konn/main.libsonnet';
 local withGenerateJsonSchema = k.extension(
   function(ctx, target, props) (
     if k.is(target, 'JsonSchema') then (
-      if props.generate && k.is(target, 'JsonSchema', props.schema.metadata.name) then (
-        target  // if generating a schema only include the root schema
+      if props.generate && k.get(target, 'metadata.annotations[konn.nr8.io/json-schema]') == 'root' then (
+        // get all schemas in the manifest except this one to add to defs
+        local defs = ctx.filter(function(target) target.is('JsonSchema') && target.get('metadata.annotations[konn.nr8.io/json-schema]') != 'root');
+
+        target {
+          spec+: {
+            '$defs'+: {
+              [x.metadata.name]: x.spec
+              for x in k.render(ctx, defs, props)
+            },
+          },
+        }
       ) else if props.filter == false then (
         target  // disable schema filtering (on by default)
       ) else (
@@ -33,28 +43,29 @@ local withGenerateJsonSchema = k.extension(
 
 local generateJsonSchema = k.feature(
   [
+    // create and annotate the root schema
     function(ctx, props) (
-      // find all json schemas in the render context and filter out the root one
-      local defs = ctx.filter(function(target) target.is('JsonSchema') && !target.is('JsonSchema', props.schema.metadata.name));
+      // get the schema from the schema manifest
+      local root = props.schema.kget('JsonSchema');
 
-      // inject json schemas into the root $defs so they can be referenced
-      props.schema {
-        spec+: {
-          '$defs'+: {
-            [x.metadata.name]: x.spec
-            for x in k.render(ctx, defs, props)
+      if k.isConfig(root) then (
+        // add root schema annotation
+        root.extend(function(ctx, target, props) target {
+          metadata+: {
+            annotations+: {
+              'konn.nr8.io/json-schema': 'root',
+            },
           },
-        },
-      }
+        })
+      )
     ),
   ],
   {
-    schema: schema('root'),
+    schema: schema('root', root=true),
     generate: false,
     filter: true,
   },
   extensions=[
-    // apply withGenerateJsonSchema extension
     function(ctx, props) withGenerateJsonSchema.apply({
       schema: props.schema,
       filter: props.filter,
