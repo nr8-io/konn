@@ -23,6 +23,7 @@ local option = function(key, value, private=false) (
     requires=null,  // dependentRequired: https://json-schema.org/understanding-json-schema/reference/conditionals#dependentRequired
 
     // annotations https://json-schema.org/understanding-json-schema/reference/annotations
+    example=null,
     examples=null,
     deprecated=null,
 
@@ -189,6 +190,17 @@ local option = function(key, value, private=false) (
       )
     )
 
+
+    + (
+      if std.type(example) != 'null' then (
+        {
+          examples+: [example],
+        }
+      ) else (
+        {}
+      )
+    )
+
     + (  // advanced overrides
       if override != null && std.isObject(override) then (
         override
@@ -211,7 +223,7 @@ local option = function(key, value, private=false) (
 
   // gets the default value for the property, used for filling defaults
   defaults(recursive=false, depth=0):: (
-    local type = self.type;
+    local type = if std.objectHas(self, 'type') then self.type else '';
 
     if (type == 'object' && recursive == false && depth == 0) || type == 'object' && recursive == true then (
       local properties = self.properties;
@@ -221,6 +233,10 @@ local option = function(key, value, private=false) (
       }
     ) else if std.objectHas(self, 'default') then (
       self.default
+    ) else if type == 'object' then (
+      {}
+    ) else if type == 'array' then (
+      []
     ) else (
       null
     )

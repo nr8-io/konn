@@ -1,24 +1,22 @@
 local object = import './object.libsonnet';
 local property = import './property.libsonnet';
 
-
 // alias for object, puts properties into additional properties
 function(
   // defaults
   title=null,
   description=null,
-  default={},
+  default=null,
   required=null,
   requires=null,
+  example=null,
   examples=null,
   deprecated=null,
 
+  // map type
+  items={},
+
   // object
-  properties={},
-  additionalProperties=null,
-  patternProperties=null,
-  unevaluatedProperties=null,
-  propertyNames=null,
   minProperties=null,
   maxProperties=null,
 
@@ -39,33 +37,36 @@ function(
     default=default,
     required=required,
     requires=requires,
+    example=example,
     examples=examples,
     deprecated=deprecated,
 
-    additionalProperties=object(
-      title=title,
-      description=description,
-      examples=examples,
-      deprecated=deprecated,
-
-      // object properties
-      properties=properties,
-      additionalProperties=additionalProperties,
-      patternProperties=patternProperties,
-      unevaluatedProperties=unevaluatedProperties,
-      propertyNames=propertyNames,
-      minProperties=minProperties,
-      maxProperties=maxProperties,
-
-      allOf=allOf,
-      anyOf=anyOf,
-      oneOf=oneOf,
-      not=not,
-    ),
+    additionalProperties=items,
 
     override=override
-  ) + {
-    // transparent property forwarding to support defaults()
-    properties:: properties,
-  }
+  )
+
+  // auto create a map example
+  + (
+    if std.type(examples) == 'null' && std.type(example) == 'null' then (
+      {
+        examples+: [{
+          key: items.defaults(),
+        }],
+      }
+    ) else (
+      {}
+    )
+  )
+
+  // transparent property forwarding to support defaults() for objects
+  + (
+    if items.type == 'object' then (
+      {
+        properties:: items,
+      }
+    ) else (
+      {}
+    )
+  )
 )

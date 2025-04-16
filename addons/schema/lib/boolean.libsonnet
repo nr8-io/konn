@@ -7,7 +7,6 @@ function(
   default=null,
   required=null,
   requires=null,
-  examples=null,
   deprecated=null,
 
   override=null,
@@ -19,7 +18,6 @@ function(
     default=default,
     required=required,
     requires=requires,
-    examples=examples,
     deprecated=deprecated,
 
     override=override

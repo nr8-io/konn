@@ -1,4 +1,4 @@
-local t = import './types.libsonnet';
+local t = import 'konn/addons/schema/types.libsonnet';
 local k = import 'konn/main.libsonnet';
 
 local bwSchema = t.schema(
@@ -11,7 +11,7 @@ local bwSchema = t.schema(
     projectId: t.string('The project id of the bitwarden vault', format='uuid'),
     createSecrets: t.bool('If empty Secret should be created with empty keys', default=true),
     createSecretStore: t.bool('If a secret store should be created', default=true, requires=['organizationId', 'projectId']),
-    secrets: t.map('secrets', 'map of secrets to create', properties={
+    secrets: t.map('secrets', 'map of secrets to create', items=t.object(properties={
       forceSync: t.string('Add force sync annotation', default='1'),
       forcePushSync: t.string('Add force sync annotation to the push secret', default='1'),
       refreshInterval: t.string('Optional refresh interval for the external secret, default is 1m, nullable', default='1m'),
@@ -19,7 +19,7 @@ local bwSchema = t.schema(
       createSecret: t.bool('Optional override for global createSecrets'),
       createPushSecret: t.bool('If a push secret should be created for this secret', default=true),
       keys: t.array(description='The keys to be synced with bitwarden secrets', examples=['[key1, key2, key3]'], items=t.string('key name'), required=true),
-    }),
+    })),
   }
 );
 
@@ -42,11 +42,7 @@ local appSchema = t.schema(
 
 local app = k.app(
   [
-    function(ctx, props) (import 'konn-topvine/namespace/main.libsonnet').configure({
-      namespace: 'testing',
-    }),
-
-    function(ctx, props) (import './main.libsonnet').apply({
+    function(ctx, props) (import 'konn/addons/schema/main.libsonnet').apply({
       generate: props.generateSchema,
       schema: appSchema,
     }),
