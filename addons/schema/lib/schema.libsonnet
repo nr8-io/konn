@@ -24,6 +24,12 @@ function(
   minProperties=null,
   maxProperties=null,
 
+  // composition
+  allOf=null,
+  anyOf=null,
+  oneOf=null,
+  not=null,
+
   // root schema
   root=false,
 
@@ -48,6 +54,11 @@ function(
     propertyNames=propertyNames,
     minProperties=minProperties,
     maxProperties=maxProperties,
+
+    allOf=allOf,
+    anyOf=anyOf,
+    oneOf=oneOf,
+    not=not,
 
     // add schema specific properties
     override=override {

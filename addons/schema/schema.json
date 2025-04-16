@@ -33,12 +33,20 @@
 					"default": "bitwarden",
 					"description": "The name of the secret store",
 					"minLength": 1,
-					"title": "Secret store",
-					"type": "string"
+					"oneOf": [
+						{
+							"type": "string"
+						},
+						{
+							"type": "number"
+						}
+					],
+					"title": "Secret store"
 				},
 				"secrets": {
 					"additionalProperties": {
 						"default": {},
+						"description": "map of secrets to create",
 						"properties": {
 							"createPushSecret": {
 								"default": true,
@@ -80,11 +88,12 @@
 							}
 						},
 						"required": ["keys"],
+						"title": "secrets",
 						"type": "object"
 					},
 					"default": {},
-					"description": "Map of secrets to create",
-					"title": "Secrets",
+					"description": "map of secrets to create",
+					"title": "secrets",
 					"type": "object"
 				}
 			},

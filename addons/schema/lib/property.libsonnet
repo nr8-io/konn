@@ -14,7 +14,6 @@ local option = function(key, value, private=false) (
   [pkey('required')]:: null,
 
   new(
-    type=null,
     title=null,
     description=null,
     default=null,  // default value
@@ -64,8 +63,15 @@ local option = function(key, value, private=false) (
     unevaluatedItems=null,
     uniqueItems=null,
 
+    // composition
+    allOf=null,
+    anyOf=null,
+    oneOf=null,
+    not=null,
+
     // directly extend json-schema for advanced use cases https://json-schema.org/
-    override=null
+    override=null,
+    type=null,
   ):: (
     self {}
     + option('type', type)
@@ -117,6 +123,12 @@ local option = function(key, value, private=false) (
     + option('propertyNames', propertyNames)
     + option('minProperties', minProperties)
     + option('maxProperties', maxProperties)
+
+    // composition
+    + option('allOf', allOf)
+    + option('anyOf', anyOf)
+    + option('oneOf', oneOf)
+    + option('not', not)
 
     + (  // add object properties if supplied
       if type == 'object' && properties != null then (

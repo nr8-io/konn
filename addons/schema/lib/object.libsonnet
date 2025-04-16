@@ -19,6 +19,12 @@ function(
   minProperties=null,
   maxProperties=null,
 
+  // composition
+  allOf=null,
+  anyOf=null,
+  oneOf=null,
+  not=null,
+
   // advanced overrides
   override=null,
 ) (
@@ -40,6 +46,11 @@ function(
     propertyNames=propertyNames,
     minProperties=minProperties,
     maxProperties=maxProperties,
+
+    allOf=allOf,
+    anyOf=anyOf,
+    oneOf=oneOf,
+    not=not,
 
     override=override
   )

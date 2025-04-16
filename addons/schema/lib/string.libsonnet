@@ -16,8 +16,13 @@ function(
   minLength=null,
   maxLength=null,
 
-  override=null,
+  // composition
+  allOf=null,
+  anyOf=null,
+  oneOf=null,
+  not=null,
 
+  override=null,
 ) (
   property.new(
     type='string',
@@ -33,6 +38,11 @@ function(
     pattern=pattern,
     minLength=minLength,
     maxLength=maxLength,
+
+    allOf=allOf,
+    anyOf=anyOf,
+    oneOf=oneOf,
+    not=not,
 
     override=override
   )

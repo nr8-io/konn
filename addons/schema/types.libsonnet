@@ -4,6 +4,7 @@ local define = import './lib/define.libsonnet';
 local map = import './lib/map.libsonnet';
 local number = import './lib/number.libsonnet';
 local object = import './lib/object.libsonnet';
+local property = import './lib/property.libsonnet';
 local reference = import './lib/reference.libsonnet';
 local schema = import './lib/schema.libsonnet';
 local string = import './lib/string.libsonnet';
@@ -20,6 +21,8 @@ local string = import './lib/string.libsonnet';
   number: number,
   obj: object,
   object: object,
+  property: property.new,
+  prop: property.new,
   ref: reference,
   reference: reference,
   schema: schema,

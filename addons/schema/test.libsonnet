@@ -6,7 +6,7 @@ local bwSchema = t.schema(
   title='Bitwarden secrets',
   description='Creates a bitwarden external secret and a secret store for the vault',
   properties={
-    secretStore: t.string('Secret store', 'The name of the secret store', default='bitwarden', required=true, minLength=1),
+    secretStore: t.property('Secret store', 'The name of the secret store', default='bitwarden', required=true, minLength=1, oneOf=[t.string(), t.number()]),
     organizationId: t.string('Organization ID', 'The organization id of the bitwarden vault', format='uuid'),
     projectId: t.string('The project id of the bitwarden vault', format='uuid'),
     createSecrets: t.bool('If empty Secret should be created with empty keys', default=true),
@@ -62,4 +62,4 @@ local app = k.app(
   }
 );
 
-app.init({ generateSchema: false })
+app.init({ generateSchema: true })

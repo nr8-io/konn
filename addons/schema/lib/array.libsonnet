@@ -21,6 +21,12 @@ function(
   unevaluatedItems=null,
   uniqueItems=null,
 
+  // composition
+  allOf=null,
+  anyOf=null,
+  oneOf=null,
+  not=null,
+
   // advanced overrides
   override=null,
 ) (
@@ -43,6 +49,11 @@ function(
     prefixItems=prefixItems,
     unevaluatedItems=unevaluatedItems,
     uniqueItems=uniqueItems,
+
+    allOf=allOf,
+    anyOf=anyOf,
+    oneOf=oneOf,
+    not=not,
 
     override=override
   )

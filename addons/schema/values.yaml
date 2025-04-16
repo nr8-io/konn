@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./schema.json
 bitwardenSecrets:
-  secretStore: bitwarden
+  secretStore: 123
   organizationId: hello
   secrets:
     example:
