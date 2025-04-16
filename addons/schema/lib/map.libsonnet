@@ -63,7 +63,7 @@ function(
   + (
     if items.type == 'object' then (
       {
-        properties:: items,
+        properties:: items.properties,
       }
     ) else (
       {}
