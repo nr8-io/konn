@@ -10,6 +10,6 @@ function(
     required=required,
     requires=requires,
   ) + {
-    '$ref': 'konn:schema:' + id,
+    '$ref': '#/$defs/konn:schema:' + id,
   }
 )

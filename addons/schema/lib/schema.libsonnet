@@ -30,7 +30,7 @@ function(
   // advanced overrides
   override={},
 ) (
-  local spec = property.new(
+  property.new(
     type='object',
 
     title=title,
@@ -54,26 +54,5 @@ function(
       '$id': 'konn:schema:' + id,
       '$schema': schema,
     }
-  );
-
-  // create a konn config and render as a kubernetes compatible CRD
-  k.manifest(
-    function(ctx, props) [
-      {
-        apiVersion: 'konn.nr8.io/v1alpha1',
-        kind: 'JsonSchema',
-        metadata+: {
-          name: id,
-        },
-        spec: spec,
-      },
-    ],
-    // filter out schemas unless the schema feature is included
-    filter=function(ctx, target, props) (
-      ctx.has('metadata.annotations[konn.nr8.io/json-schema]', 'root') || root
-    )
-  ) + {
-    defaults:: spec.defaults,
-    property:: spec.get,
-  }
+  )
 )

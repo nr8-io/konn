@@ -187,7 +187,7 @@ local option = function(key, value, private=false) (
   ),
 
   // access object property by key
-  get(key=null):: (
+  property(key=null):: (
     local type = self.type;
 
     if type == 'object' && std.objectHas(self.properties, key) then (

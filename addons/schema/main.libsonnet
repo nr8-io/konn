@@ -1,11 +1,4 @@
-local array = import './lib/array.libsonnet';
-local boolean = import './lib/boolean.libsonnet';
-local feature = import './lib/feature.libsonnet';
-local number = import './lib/number.libsonnet';
-local object = import './lib/object.libsonnet';
-local ref = import './lib/ref.libsonnet';
-local schema = import './lib/schema.libsonnet';
-local string = import './lib/string.libsonnet';
+local t = import './types.libsonnet';
 local k = import 'konn/main.libsonnet';
 
 // extension to filter out schemas
@@ -41,27 +34,15 @@ local withGenerateJsonSchema = k.extension(
   }
 );
 
-local generateJsonSchema = k.feature(
+k.feature(
   [
     // create and annotate the root schema
     function(ctx, props) (
-      // get the schema from the schema manifest
-      local root = props.schema.kget('JsonSchema');
-
-      if k.isConfig(root) then (
-        // add root schema annotation
-        root.extend(function(ctx, target, props) target {
-          metadata+: {
-            annotations+: {
-              'konn.nr8.io/json-schema': 'root',
-            },
-          },
-        })
-      )
+      t.define(props.schema, root=true)
     ),
   ],
   {
-    schema: schema('root', root=true),
+    schema: t.schema('root'),
     generate: false,
     filter: true,
   },
@@ -72,20 +53,4 @@ local generateJsonSchema = k.feature(
       generate: props.generate,
     }),
   ]
-);
-
-{
-  arr: array,
-  array: array,
-  bool: boolean,
-  boolean: boolean,
-  generateJsonSchema: generateJsonSchema,
-  num: number,
-  number: number,
-  obj: object,
-  object: object,
-  ref: ref,
-  schema: schema,
-  str: string,
-  string: string,
-}
+)
