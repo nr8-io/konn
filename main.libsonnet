@@ -28,6 +28,7 @@ local util = import './lib/util.libsonnet';
   // get/set helpers
   get:: helpers.getPath,
   set:: helpers.setPath,
+  patch:: std.mergePatch,
 
   // lib functions
   isConfig:: helpers.isConfig,
