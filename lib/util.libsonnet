@@ -1,3 +1,15 @@
+// trace function for debugging
+local trace = function(target, message='', return=function() null) (
+  // enable return value override
+  local returnValue = if std.isFunction(return) then (
+    target
+  ) else (
+    return
+  );
+
+  std.trace(message + ' ' + std.manifestJson(target), returnValue)
+);
+
 // Conditional patch with default value
 // default is an empty object
 local onlyIf = function(test, patch, default={}) (
@@ -48,43 +60,39 @@ local template = function(str, props={}) (
 // Parse yaml from string with templating
 // Passes flattened params to the template
 local yaml = function(str, props={}, single=true, template=true) (
-  local parsed = if template then std.parseYaml(str % props) else std.parseYaml(str);
+  local parsed = if std.length(std.objectFields(props)) > 0 && template then (
+    std.parseYaml(str % props)
+  ) else (
+    std.parseYaml(str)
+  );
 
   // normalize to array
-  local documents = if std.isArray(parsed) then (
+  local documents = std.filter(function(val) val != null, if std.isArray(parsed) then (
     parsed
   ) else (
     [parsed]
-  );
+  ));
 
   // allow returning single document
   if single && std.length(documents) == 1 then documents[0] else documents
 );
 
 local json = function(str, props={}, single=true, template=true) (
-  local parsed = if template then std.parseJson(str % props) else std.parseJson(str);
+  local parsed = if std.length(std.objectFields(props)) > 0 && template then (
+    std.parseJson(str % props)
+  ) else (
+    std.parseJson(str)
+  );
 
   // normalize to array
-  local documents = if std.isArray(parsed) then (
+  local documents = std.filter(function(val) val != null, if std.isArray(parsed) then (
     parsed
   ) else (
     [parsed]
-  );
+  ));
 
   // allow returning single document
   if single && std.length(documents) == 1 then documents[0] else documents
-);
-
-// trace function for debugging
-local trace = function(target, message='', return=function() null) (
-  // enable return value override
-  local returnValue = if std.isFunction(return) then (
-    target
-  ) else (
-    return
-  );
-
-  std.trace(message + ' ' + std.manifestJson(target), returnValue)
 );
 
 local is = function(body, kind, name=null) (
