@@ -29,31 +29,31 @@ function(
   // advanced overrides
   override=null,
 ) (
-  property.new(
-    type='object',
+  property.new({
+    type: 'object',
 
-    title=title,
-    description=description,
-    default=default,
-    required=required,
-    requires=requires,
-    example=example,
-    examples=examples,
-    deprecated=deprecated,
+    title: title,
+    description: description,
+    default: default,
+    required: required,
+    requires: requires,
+    example: example,
+    examples: examples,
+    deprecated: deprecated,
 
-    properties=properties,
-    patternProperties=patternProperties,
-    additionalProperties=additionalProperties,
-    unevaluatedProperties=unevaluatedProperties,
-    propertyNames=propertyNames,
-    minProperties=minProperties,
-    maxProperties=maxProperties,
+    properties: properties,
+    patternProperties: patternProperties,
+    additionalProperties: additionalProperties,
+    unevaluatedProperties: unevaluatedProperties,
+    propertyNames: propertyNames,
+    minProperties: minProperties,
+    maxProperties: maxProperties,
 
-    allOf=allOf,
-    anyOf=anyOf,
-    oneOf=oneOf,
-    not=not,
+    allOf: allOf,
+    anyOf: anyOf,
+    oneOf: oneOf,
+    not: not,
 
-    override=override
-  )
+    override: override,
+  })
 )

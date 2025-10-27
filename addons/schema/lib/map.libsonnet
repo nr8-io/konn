@@ -29,28 +29,28 @@ function(
   // advanced overrides
   override=null,
 ) (
-  property.new(
-    type='object',
+  property.new({
+    type: 'object',
 
-    title=title,
-    description=description,
-    default=default,
-    required=required,
-    requires=requires,
-    example=example,
-    examples=examples,
-    deprecated=deprecated,
+    title: title,
+    description: description,
+    default: default,
+    required: required,
+    requires: requires,
+    example: example,
+    examples: examples,
+    deprecated: deprecated,
 
-    additionalProperties=items,
+    additionalProperties: items,
 
-    override=override
-  )
+    override: override,
+  })
 
   // auto create a map example
   + (
     if std.type(examples) == 'null' && std.type(example) == 'null' then (
       {
-        examples+: [{
+        examples: [{
           key: items.defaults(),
         }],
       }

@@ -1,4 +1,3 @@
-local property = import './property.libsonnet';
 local k = import 'konn/main.libsonnet';
 
 // create a konn config and render as a kubernetes compatible CRD with auto filter to be used in $defs

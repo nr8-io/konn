@@ -2,15 +2,17 @@ local property = import './property.libsonnet';
 
 function(
   id,
-  default={},
+
   required=null,
   requires=null,
+
+  default={},
 ) (
-  property.new(
-    default=default,
-    required=required,
-    requires=requires,
-  ) + {
+  property.new({
+    required: required,
+    requires: requires,
+    default: default,
+  }) + {
     '$ref': '#/$defs/konn:schema:' + id,
   }
 )

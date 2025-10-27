@@ -25,27 +25,27 @@ function(
 
   override=null,
 ) (
-  property.new(
-    type='string',
-    title=title,
-    description=description,
-    default=default,
-    required=required,
-    requires=requires,
-    example=example,
-    examples=examples,
-    deprecated=deprecated,
+  property.new({
+    type: 'string',
+    title: title,
+    description: description,
+    default: default,
+    required: required,
+    requires: requires,
+    example: example,
+    examples: examples,
+    deprecated: deprecated,
 
-    format=format,
-    pattern=pattern,
-    minLength=minLength,
-    maxLength=maxLength,
+    format: format,
+    pattern: pattern,
+    minLength: minLength,
+    maxLength: maxLength,
 
-    allOf=allOf,
-    anyOf=anyOf,
-    oneOf=oneOf,
-    not=not,
+    allOf: allOf,
+    anyOf: anyOf,
+    oneOf: oneOf,
+    not: not,
 
-    override=override
-  )
+    override: override,
+  })
 )

@@ -37,35 +37,35 @@ function(
   // advanced overrides
   override={},
 ) (
-  property.new(
-    type='object',
+  property.new({
+    type: 'object',
 
-    title=title,
-    description=description,
-    default=default,
-    required=required,
-    requires=requires,
-    example=example,
-    examples=examples,
-    deprecated=deprecated,
+    title: title,
+    description: description,
+    default: default,
+    required: required,
+    requires: requires,
+    example: example,
+    examples: examples,
+    deprecated: deprecated,
 
-    properties=properties,
-    patternProperties=patternProperties,
-    additionalProperties=additionalProperties,
-    unevaluatedProperties=unevaluatedProperties,
-    propertyNames=propertyNames,
-    minProperties=minProperties,
-    maxProperties=maxProperties,
+    properties: properties,
+    patternProperties: patternProperties,
+    additionalProperties: additionalProperties,
+    unevaluatedProperties: unevaluatedProperties,
+    propertyNames: propertyNames,
+    minProperties: minProperties,
+    maxProperties: maxProperties,
 
-    allOf=allOf,
-    anyOf=anyOf,
-    oneOf=oneOf,
-    not=not,
+    allOf: allOf,
+    anyOf: anyOf,
+    oneOf: oneOf,
+    not: not,
 
     // add schema specific properties
-    override=override {
+    override: override {
       '$id': 'konn:schema:' + id,
       '$schema': schema,
-    }
-  )
+    },
+  })
 )

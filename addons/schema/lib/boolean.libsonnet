@@ -11,15 +11,15 @@ function(
 
   override=null,
 ) (
-  property.new(
-    type='boolean',
-    title=title,
-    description=description,
-    default=default,
-    required=required,
-    requires=requires,
-    deprecated=deprecated,
+  property.new({
+    type: 'boolean',
+    title: title,
+    description: description,
+    default: default,
+    required: required,
+    requires: requires,
+    deprecated: deprecated,
 
-    override=override
-  )
+    override: override,
+  })
 )

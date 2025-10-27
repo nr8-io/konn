@@ -31,32 +31,32 @@ function(
   // advanced overrides
   override=null,
 ) (
-  property.new(
-    type='array',
-    title=title,
-    description=description,
-    default=default,
-    required=required,
-    requires=requires,
-    example=example,
-    examples=examples,
-    deprecated=deprecated,
+  property.new({
+    type: 'array',
+    title: title,
+    description: description,
+    default: default,
+    required: required,
+    requires: requires,
+    example: example,
+    examples: examples,
+    deprecated: deprecated,
 
-    contains=contains,
-    items=items,
-    maxContains=maxContains,
-    maxItems=maxItems,
-    minContains=minContains,
-    minItems=minItems,
-    prefixItems=prefixItems,
-    unevaluatedItems=unevaluatedItems,
-    uniqueItems=uniqueItems,
+    contains: contains,
+    items: items,
+    maxContains: maxContains,
+    maxItems: maxItems,
+    minContains: minContains,
+    minItems: minItems,
+    prefixItems: prefixItems,
+    unevaluatedItems: unevaluatedItems,
+    uniqueItems: uniqueItems,
 
-    allOf=allOf,
-    anyOf=anyOf,
-    oneOf=oneOf,
-    not=not,
+    allOf: allOf,
+    anyOf: anyOf,
+    oneOf: oneOf,
+    not: not,
 
-    override=override
-  )
+    override: override,
+  })
 )
