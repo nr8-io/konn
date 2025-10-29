@@ -163,6 +163,14 @@ local resolveProps = function(target, props={}) (
   )
 );
 
+// parse value to boolean
+local parseToBool(input) =
+  if std.type(input) == 'boolean' then input
+  else if std.isNumber(input) then if input == 0 then false else true
+  else if input == 'true' then true
+  else if input == 'false' then false
+  else error 'Invalid boolean string';
+
 // exports
 {
   applyExtensions:: applyExtensions,
@@ -173,6 +181,7 @@ local resolveProps = function(target, props={}) (
   isRenderable:: isRenderable,
   isResolvable:: isResolvable,
   mapConfigs:: mapConfigs,
+  parseToBool:: convertToBool,
   renderConfigs:: renderConfigs,
   render:: render,
   resolveProps:: resolveProps,
