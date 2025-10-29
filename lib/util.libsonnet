@@ -120,8 +120,8 @@ local is = function(body, kind, name=null) (
 local parseToBool(input) =
   if std.type(input) == 'boolean' then input
   else if std.isNumber(input) then if input == 0 then false else true
-  else if input == 'true' then true
-  else if input == 'false' then false
+  else if input == 'true' || input == '1' then true
+  else if input == 'false' || input == '0' then false
   else error 'Invalid boolean string';
 
 {
