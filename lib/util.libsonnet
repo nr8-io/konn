@@ -116,6 +116,13 @@ local is = function(body, kind, name=null) (
   )
 );
 
+// parse value to boolean
+local parseToBool(input) =
+  if std.type(input) == 'boolean' then input
+  else if std.isNumber(input) then if input == 0 then false else true
+  else if input == 'true' then true
+  else if input == 'false' then false
+  else error 'Invalid boolean string';
 
 {
   // conditional helpers
@@ -131,6 +138,9 @@ local is = function(body, kind, name=null) (
   template:: template,
   yaml:: yaml,
   json:: json,
+
+  // utils
+  parseToBool:: parseToBool,
 
   // debugging helpers
   trace:: trace,
