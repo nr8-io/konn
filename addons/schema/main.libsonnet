@@ -15,28 +15,24 @@ types {
 
     // root schema feature with generation extension
     {
+      schema: schema,
       generate:: function(enabled=false, filter=true) k.feature(
         [
           // create and annotate the root schema
           function(ctx, props) (
-            types.manifest(props.schema, root=true)
+            types.manifest(schema, root=true)
           ),
         ],
-        {
-          schema: schema,
-          enabled: enabled,
-          filter: filter,
-        },
         extensions=[
           function(ctx, props) (import './extensions/generate-json-schema.libsonnet').configure({
-            schema: props.schema,
-            filter: props.filter,
-            enabled: props.enabled || k.get(props, schemaKey, false),
+            schema: schema,
+            filter: filter,
+            enabled: enabled || k.get(props, schemaKey, false),
           }),
         ]
       ),
-      manifest:: function() (
-        types.manifest(schema)
+      manifest:: function(root=false) (
+        types.manifest(schema, root=root)
       ),
       defaults:: schema.defaults,
       property:: schema.property,

@@ -23,19 +23,25 @@ local option = function(props={}, key, types=false, private=false) (
 );
 
 local property = {
+  // default type is object
+  [pkey('type')]:: 'object',
+
   // requirement tracking
   [pkey('requires')]:: null,  // used for requiredFor, if true, the property is required
   [pkey('required')]:: null,
 
+  // create a new property definition
   new(options={}):: (
     local type = if std.objectHas(options, 'type') then options.type else if std.objectHas(options, '$ref') then 'ref' else 'object';
 
     self
 
+    // private type key to support nested json/yaml parsing
+    + { [pkey('type')]: type }
+
     + option(options, 'title')
     + option(options, 'description')
     + option(options, 'default')
-
 
     // private, used by parent schema for evaluating sub-schemas
     // https://json-schema.org/understanding-json-schema/reference/object#required
@@ -113,7 +119,11 @@ local property = {
         // add properties & dependent requirements
         {
           properties: {
-            [x]: property.new(options.properties[x])
+            [x]: if !std.objectHasAll(options.properties[x], pkey('type')) then (
+              property.new(options.properties[x])  // recursively create property from plain objects
+            ) else (
+              options.properties[x]
+            )
             for x in std.objectFields(options.properties)
             if options.properties != null
           },
