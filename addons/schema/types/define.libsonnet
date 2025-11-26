@@ -1,7 +1,7 @@
 local k = import 'konn/main.libsonnet';
 
 // create a konn config and render as a kubernetes compatible CRD with auto filter to be used in $defs
-function(spec, root=false) (
+function(spec={}, root=false) (
   local schema = {
     apiVersion: 'konn.nr8.io/v1alpha1',
     kind: 'JsonSchema',

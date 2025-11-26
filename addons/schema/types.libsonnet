@@ -1,31 +1,32 @@
-local array = import './lib/array.libsonnet';
-local boolean = import './lib/boolean.libsonnet';
-local define = import './lib/define.libsonnet';
-local map = import './lib/map.libsonnet';
-local number = import './lib/number.libsonnet';
-local object = import './lib/object.libsonnet';
-local property = import './lib/property.libsonnet';
-local reference = import './lib/reference.libsonnet';
-local schema = import './lib/schema.libsonnet';
-local string = import './lib/string.libsonnet';
+local k = import '../../main.libsonnet';
+local array = import './types/array.libsonnet';
+local boolean = import './types/boolean.libsonnet';
+local define = import './types/define.libsonnet';
+local map = import './types/map.libsonnet';
+local number = import './types/number.libsonnet';
+local object = import './types/object.libsonnet';
+local property = import './types/property.libsonnet';
+local reference = import './types/reference.libsonnet';
+local schema = import './types/schema.libsonnet';
+local string = import './types/string.libsonnet';
 
 {
-  arr: array,
-  array: array,
-  bool: boolean,
-  boolean: boolean,
-  def: define,
-  define: define,
-  map: map,
-  num: number,
-  number: number,
-  obj: object,
-  object: object,
-  property: property.call,
-  prop: property.call,
-  ref: reference,
-  reference: reference,
-  schema: schema,
-  str: string,
-  string: string,
+  arr:: array,
+  array:: array,
+  bool:: boolean,
+  boolean:: boolean,
+  def:: define,
+  define:: define,
+  map:: map,
+  num:: number,
+  number:: number,
+  obj:: object,
+  object:: object,
+  property:: property.new,
+  prop:: property.new,
+  ref:: reference,
+  reference:: reference,
+  schema:: schema,
+  str:: string,
+  string:: string,
 }

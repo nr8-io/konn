@@ -50,7 +50,7 @@ function(
   + (
     if std.type(examples) == 'null' && std.type(example) == 'null' then (
       {
-        examples: [{
+        examples+: [{
           key: items.defaults(),
         }],
       }
