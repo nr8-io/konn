@@ -15,7 +15,7 @@ types {
 
     // root schema feature with generation extension
     {
-      schema: schema,
+      schema: schema,  // schema preview
       generate:: function(enabled=false, filter=true) k.feature(
         [
           // create and annotate the root schema

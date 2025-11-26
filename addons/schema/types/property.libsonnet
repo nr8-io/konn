@@ -213,12 +213,13 @@ local property = {
     local type = if std.objectHas(self, 'type') then self.type else 'object';
 
     if (type == 'object' && recursive == false && depth == 0) || type == 'object' && recursive == true then (
-      local properties = if std.objectHas(self, 'properties') then self.properties else {};
+      local properties = if std.objectHasAll(self, 'properties') then self.properties else {};
+      local default = if std.objectHas(self, 'default') then self.default else {};
 
-      {
+      std.mergePatch(default, {
         [x]: properties[x].defaults(recursive, depth + 1)
         for x in std.objectFields(properties)
-      }
+      })
     ) else if std.objectHas(self, 'default') then (
       self.default
     ) else if type == 'object' then (
