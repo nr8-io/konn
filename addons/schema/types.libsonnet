@@ -1,7 +1,7 @@
 local k = import '../../main.libsonnet';
 local array = import './types/array.libsonnet';
 local boolean = import './types/boolean.libsonnet';
-local define = import './types/define.libsonnet';
+local manifest = import './types/manifest.libsonnet';
 local map = import './types/map.libsonnet';
 local number = import './types/number.libsonnet';
 local object = import './types/object.libsonnet';
@@ -15,8 +15,7 @@ local string = import './types/string.libsonnet';
   array:: array,
   bool:: boolean,
   boolean:: boolean,
-  def:: define,
-  define:: define,
+  manifest:: manifest,
   map:: map,
   num:: number,
   number:: number,

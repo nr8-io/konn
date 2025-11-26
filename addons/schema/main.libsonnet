@@ -15,11 +15,11 @@ types {
 
     // root schema feature with generation extension
     {
-      generator:: function(enabled=false, filter=true) k.feature(
+      generate:: function(enabled=false, filter=true) k.feature(
         [
           // create and annotate the root schema
           function(ctx, props) (
-            types.define(props.schema, root=true)
+            types.manifest(props.schema, root=true)
           ),
         ],
         {
@@ -35,8 +35,8 @@ types {
           }),
         ]
       ),
-      define:: function() (
-        types.define(schema)
+      manifest:: function() (
+        types.manifest(schema)
       ),
       defaults:: schema.defaults,
       property:: schema.property,
