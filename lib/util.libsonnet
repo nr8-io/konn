@@ -1,3 +1,5 @@
+local helpers = import './helpers.libsonnet';
+
 // trace function for debugging
 local trace = function(target, message='', return=function() null) (
   // enable return value override
@@ -57,9 +59,25 @@ local template = function(str, props={}) (
   )
 );
 
+// walks an object and replaces any string values that match keys in the props with the corresponding value from props
+// using string interpolation syntax, e.g. "{{ .path.to.value }}"
+local interpolate = function(obj, props=obj)
+  if std.isObject(obj) then
+    {
+      [item.key]: interpolate(item.value, props)
+      for item in std.objectKeysValues(obj)
+    }
+  else if std.isArray(obj) then
+    [interpolate(x, props) for x in obj]
+  else if std.isString(obj) && std.startsWith(obj, '{{') && std.endsWith(obj, '}}') then
+    helpers.getPath(props, std.trim(obj[2:-2]))
+  else
+    obj;
+
+
 // Parse yaml from string with templating
 // Passes flattened params to the template
-local yaml = function(str, props={}, single=true, template=true) (
+local yaml = function(str, props={}, single=true, template=true, interpolation=false) (
   local parsed = if std.length(std.objectFields(props)) > 0 && template then (
     std.parseYaml(str % props)
   ) else (
@@ -74,10 +92,12 @@ local yaml = function(str, props={}, single=true, template=true) (
   ));
 
   // allow returning single document
-  if single && std.length(documents) == 1 then documents[0] else documents
+  local result = if single && std.length(documents) == 1 then documents[0] else documents;
+
+  if interpolation then interpolate(result) else result
 );
 
-local json = function(str, props={}, single=true, template=true) (
+local json = function(str, props={}, single=true, template=true, interpolation=false) (
   local parsed = if std.length(std.objectFields(props)) > 0 && template then (
     std.parseJson(str % props)
   ) else (
@@ -92,7 +112,9 @@ local json = function(str, props={}, single=true, template=true) (
   ));
 
   // allow returning single document
-  if single && std.length(documents) == 1 then documents[0] else documents
+  local result = if single && std.length(documents) == 1 then documents[0] else documents;
+
+  if interpolation then interpolate(result) else result
 );
 
 local is = function(body, kind, name=null) (
@@ -135,6 +157,7 @@ local parseToBool(input) =
   is:: is,
 
   // templating helpers
+  interpolate:: interpolate,
   template:: template,
   yaml:: yaml,
   json:: json,

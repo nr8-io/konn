@@ -14,6 +14,7 @@ local util = import './lib/util.libsonnet';
   onlyIfHas:: util.onlyIfHas,
   onlyIfHasArr:: util.onlyIfHasArr,
   parseToBool:: util.parseToBool,
+  interpolate:: util.interpolate,
 
   // templating helpers
   yaml:: util.yaml,
