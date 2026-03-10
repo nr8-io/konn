@@ -3,6 +3,7 @@ local context = import './context.libsonnet';
 local feature = import './feature.libsonnet';
 local lib = import './helpers.libsonnet';
 local manifest = import './manifest.libsonnet';
+local util = import './util.libsonnet';
 
 // Feature
 {
@@ -38,10 +39,17 @@ local manifest = import './manifest.libsonnet';
   // render the config with resolved props
   render(
     ctx=context.new(self.args.defaults, self.configs),
-    props=self.args.defaults
+    props=self.args.defaults,
+    interpolate=true
   ):: (
-    local moreProps = std.mergePatch(self.args.defaults, props);
-    local configs = self.resolve(ctx, props);
+    // merge defaults with provided values with optional interpolation
+    local moreProps = if interpolate then (
+      util.interpolate(std.mergePatch(self.args.defaults, props))
+    ) else (
+      std.mergePatch(self.args.defaults, props)
+    );
+
+    local configs = self.resolve(ctx, moreProps);
 
     // context with resolved manifests
     local resolvedCtx = ctx.extend(moreProps, configs);
@@ -65,6 +73,7 @@ local manifest = import './manifest.libsonnet';
   init(
     props=self.args.defaults,
     profile='default',
+    interpolate=true
   ):: (
     // get the profile props
     local profileProps = if std.objectHas(self.profiles, profile) then (
@@ -84,12 +93,13 @@ local manifest = import './manifest.libsonnet';
       profile: profile,
     });
 
-    self.render(ctx, moreProps)
+    self.render(ctx, moreProps, interpolate)
   ),
 
   debug(
     props=self.args.defaults,
     profile='default',
+    interpolate=true
   ):: (
     // get the profile props
     local profileProps = if std.objectHas(self.profiles, profile) then (
@@ -109,7 +119,7 @@ local manifest = import './manifest.libsonnet';
       profile: profile,
     });
 
-    local body = self.render(ctx, mergedProps);
+    local body = self.render(ctx, mergedProps, interpolate);
     local profiles = self.profiles;
     local defaults = self.args.defaults;
 
