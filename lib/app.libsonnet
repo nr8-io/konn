@@ -17,6 +17,7 @@ local util = import './util.libsonnet';
     extensions=[],
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
+    interpolate=false
   ):: (
     self + {
       configs:: self.resolve(context.new(defaults), defaults),
@@ -30,9 +31,10 @@ local util = import './util.libsonnet';
         extensions: extensions,
         filter: filter,
         map: map,
+        interpolate: interpolate,
       },
     } + {
-      body: self.render(context.new(defaults, self.configs), defaults),
+      body: self.render(context.new(defaults, self.configs), defaults, interpolate),
     }
   ),
 
@@ -40,7 +42,7 @@ local util = import './util.libsonnet';
   render(
     ctx=context.new(self.args.defaults, self.configs),
     props=self.args.defaults,
-    interpolate=true
+    interpolate=self.args.interpolate
   ):: (
     // merge defaults with provided values with optional interpolation
     local moreProps = if interpolate then (
@@ -73,7 +75,7 @@ local util = import './util.libsonnet';
   init(
     props=self.args.defaults,
     profile='default',
-    interpolate=true
+    interpolate=self.args.interpolate
   ):: (
     // get the profile props
     local profileProps = if std.objectHas(self.profiles, profile) then (
@@ -99,7 +101,7 @@ local util = import './util.libsonnet';
   debug(
     props=self.args.defaults,
     profile='default',
-    interpolate=true
+    interpolate=self.args.interpolate
   ):: (
     // get the profile props
     local profileProps = if std.objectHas(self.profiles, profile) then (

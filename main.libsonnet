@@ -62,6 +62,7 @@ local util = import './lib/util.libsonnet';
     extensions=[],
     filter=function(ctx, config, props) true,
     map=function(ctx, config, props) config,
+    interpolate=false
   ):: (
     app.new(
       features=features,
@@ -69,7 +70,8 @@ local util = import './lib/util.libsonnet';
       profiles=profiles,
       extensions=extensions,
       filter=filter,
-      map=map
+      map=map,
+      interpolate=interpolate
     )
   ),
 
